@@ -15,11 +15,11 @@ C -------------------------------------------------------------------------
       IMPLICIT DOUBLE PRECISION (a-h, o-z)
 !      REAL(8) SS,SS1,Hydro
 !      REAL(8),COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
-      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
-      !DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
+!      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
+      DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
       !DIMENSION SS1(600,10)
       !DIMENSION Hydro(600,3)
-!      COMMON/BLK1/SS
+      COMMON/BLK1/SS
 !     COMMON/BLK1/SS,SS1,Hydro 
       DIMENSION A(600)
       DIMENSION B(600)

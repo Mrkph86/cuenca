@@ -9,14 +9,14 @@ C ------------------------------------------------------------------------
       IMPLICIT DOUBLE PRECISION (a-h, o-z)
 !      REAL(8) SS,SS1,Hydro
 !      REAL(8),COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
-      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
-      !DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
+!      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
+      DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
       DIMENSION A(600)
-!      COMMON/BLK1/SS
+      COMMON/BLK1/SS
       !DIMENSION SS1(600,10)
       !DIMENSION Hydro(600,3)
 !      COMMON/BLK1/SS,SS1,Hydro  
-c      DIMENSION PP(m1,n1)
+C      DIMENSION PP(m1,n1)
 C ------------------------------------------------------------------------
 C   OPENING THE CUENCA FILES
 C ------------------------------------------------------------------------     
@@ -106,12 +106,12 @@ C ------------------------------------------------------------------------
       IMPLICIT DOUBLE PRECISION (a-h, o-z)
 !      REAL(8) SS,SS1,Hydro
 !      REAL(8),COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
-      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
-      !DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
+!      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
+      DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
       !DIMENSION SS1(600,10)
       !DIMENSION Hydro(600,3)
       DIMENSION A(600)
-!      COMMON/BLK1/SS
+      COMMON/BLK1/SS
 !      COMMON/BLK1/SS,SS1,Hydro
 C  ----------------------------------------------------------------------------
 C  INITIALIZE KODE PROCESSES - ! book example
