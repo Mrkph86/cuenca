@@ -51,11 +51,11 @@ C ------------------------------------------------------------------------
 C   DECLARE VARIABLES
 C ------------------------------------------------------------------------    
       IMPLICIT DOUBLE PRECISION (a-h, o-z)
-!      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)! TEST 2.21.18
-      DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
-      DIMENSION A(600) 
-      DIMENSION B(600) ! added 9.4.2018
-      COMMON/BLK1/SS
+      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)! TEST 2.21.18
+      !DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
+!      DIMENSION A(600) ! A and B are just a number in untih -  A and B should not have dimension 9.5.18 
+!      DIMENSION B(600) ! added 9.4.2018
+!      COMMON/BLK1/SS
       DIMENSION H(440)
       DIMENSION UH(150),PERCNT(150),R(288)
       DIMENSION DYR(48)
@@ -67,22 +67,23 @@ C ------------------------------------------------------------------------
       DATA PERCNT/150*0./
       DATA R/288*0./
       DATA H/440*0./
-      REAL RR(A,B,T) ! 9.5.18
+      REAL RR,A,B,T,R5A,R30A,R1A,R3A,R6A,R24A !9.5.18 (A,B,T) = (1,1,1)
 !      Hydro RETURNs the hydrograph, Time(Hours) and Discharge(CFS) 
 C -----------------------------------------------------------------------      
 C Setting H to zero
-C -----------------------------------------------------------------------     
-C RR - FUNCTION !9.4.18     
-C -----------------------------------------------------------------------      
-      !REAL FUNCTION RR(A,B,T)
-      !RR(A,B,T)=(EXP((A*ALOG(T))+B))    
-      !RETURN
-      !END FUNCTION RR  
+!C -----------------------------------------------------------------------     
+!C RR - FUNCTION !9.4.18     
+!C -----------------------------------------------------------------------      
+!      REAL FUNCTION RR(A,B,T)
+!      REAL A,B,T
+!      RR(A,B,T)=(EXP((A*ALOG(T))+B))    
+!      RETURN
+!      END FUNCTION RR  
 C -----------------------------------------------------------------------      
 C FUNCTION
 C -----------------------------------------------------------------------     
-!      RR(T)=(EXP((A*ALOG(T))+B))  ! Book
-      RR(A,B,T)=(EXP((A*ALOG(T))+B))  
+!      RR(T)=(EXP((A*ALOG(T))+B)) ! Book
+!      RR(A,B,T)=(EXP((A*ALOG(T))+B))  
 C -----------------------------------------------------------------------      
 C..READ DATA INPUT
 C...OPO...NA was added to make references to the number of stream to be simulated
@@ -95,7 +96,7 @@ C...OPO...NA was added to make references to the number of stream to be simulate
       IF(ZN1R.EQ.ZN1.AND.ZN2R.EQ.ZN2.AND.KODER.EQ.KODE) THEN ! TEST 2.16.18
       READ(RAN,*)R5,R30,R1,R3,R6,R24,FX5,FX30,FX1,FX3,FX6,FX24
       END IF
-      
+C ------------------------------------------------------------------------      
 c 02/01/18      READ(5,*)NA,KTYPE,XL,XLCA,HH,XN,AREA,VSL,KODE1,BASCON,SLP,                                !"5" should be NDAT
 c 02/01/18 M.P. - the program breaks in this point IF I elimiate the initial varialbles
 c 02/01/18      READ(NDAT,*)KTYPE,XL,XLCA,HH,XN,AREA,VSL,KODE1,BASCON,SLP,  
@@ -103,7 +104,7 @@ c 02/01/18 R5,R30,R1,R3,R6,R24,SS,KSTORM,KSOIL,PV,PF,PM,PD,NUT,
 c 02/01/18 M.P. -Added SS,KSTORM and NUT
 c 02/01/18     C R5,R30,R1,R3,R6,R24,SS,KSTORM,KSOIL,PV,PF,PM,PD,NUT !Added SS,KSTORM c02/01/18and NUT
 c 02/01/18     C FX5,FX30,FX1,FX3,FX6,FX24,DAOPT,TIME1,TIME2
-      
+C ------------------------------------------------------------------------      
       SS=SS1 ! M.P. ---------------  
       AX=AREA
       XLX=XL
@@ -518,4 +519,11 @@ C      RMC - 1.30.17 - creating the FUNCTION
 	 !RR=EXP((A*ALOG(T))+B)
        !RETURN
        !END
-      
+C -----------------------------------------------------------------------       
+C RR - FUNCTION !9.4.18     
+C -----------------------------------------------------------------------      
+      REAL FUNCTION RR(A,B,T)
+      REAL A,B,T
+      RR= EXP((A*ALOG(T))+B)    
+      RETURN
+      END FUNCTION RR  

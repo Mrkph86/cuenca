@@ -86,10 +86,10 @@ C -----------------------------------------------------------------------
 C   DECLARE VARIABLES
 C -----------------------------------------------------------------------
 	IMPLICIT DOUBLE PRECISION (a-h, o-z)
-!	COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
-      DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
+	COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
+      !DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
       DIMENSION A(600)
-      COMMON/BLK1/SS
+!      COMMON/BLK1/SS
 	COMMON/hydgph/u(5000,2),qh(5000,3)
 	COMMON/rain/rfix,rti(5000),rfi(5000),rcum(5000,2),ref(5000,2),ncum
 	CHARACTER*20 soilty

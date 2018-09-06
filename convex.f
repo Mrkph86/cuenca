@@ -26,9 +26,9 @@ C   DECLARE VARIABLES
 C ----------------------------------------------------------------------- 
       IMPLICIT DOUBLE PRECISION(A-H,O-Z) !(8.28.18)      
       COMMON/BLK10/B(600)
-!      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
-      DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
-      COMMON/BLK1/SS
+      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
+      !DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
+!      COMMON/BLK1/SS
       DIMENSION A(600)
 !     EXPORT Hydrograph, Date (hours) StreamA(CFS)
 C ------------------------------------------------------------------------

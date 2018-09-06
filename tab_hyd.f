@@ -15,9 +15,9 @@ C                  Gainesville, FL 32611        Raleigh, NC 27695-7625(USA)
 C                  e-mail: carpena@ufl.edu      
 C --------------------------------------------------------------
       IMPLICIT DOUBLE PRECISION (a-h, o-z)
-!      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
-      DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
-      COMMON/BLK1/SS
+      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
+      !DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
+!      COMMON/BLK1/SS
       COMMON/hydgph/u(5000,2),qh(5000,3)
       COMMON/rain/rfix,rti(5000),rfi(5000),rcum(5000,2),ref(5000,2),ncum
       DIMENSION qhstep(600,3)
