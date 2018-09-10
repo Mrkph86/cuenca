@@ -7,7 +7,6 @@ C To compile with gfortran is necesary to declare these variables as     C
 C CHARACTER instead of INTEGER                                           C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
       IMPLICIT DOUBLE PRECISION (a-h, o-z)
-c      INTEGER LETM,BLANK,DOT,CROSS,DASH,LINE(41)
       DIMENSION H(440)
 	CHARACTER*1 LETM,BLANK,DOT,CROSS,DASH,LINE(41) !this line is different from the book
       DATA LETM,BLANK,DOT,CROSS,DASH,LINE/'V',' ','.','Q','I',41*' '/
@@ -58,6 +57,7 @@ C     Output Graph Loop
 C ------------------------------------------------------------------------
       DO 200 I=1, INTERV
       TEST=H(I)*F
+c	print*,'H(I),F,TEST=',H(I),F,TEST
       XMASS=XMASS+H(I)*STEP
       LINE(1)=DOT
       LINE(11)=DOT
@@ -66,6 +66,7 @@ C ------------------------------------------------------------------------
       LINE(41)=DOT
       J=TEST+1
       JMASS=XMASS*FMASS+1
+c	print*,'J,JMASS=',J,JMASS
       LINE(JMASS)=LETM
       LINE(J)=CROSS
       IF(KNUM.EQ.1) GO TO 400

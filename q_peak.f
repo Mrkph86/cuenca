@@ -1,6 +1,6 @@
 
 C --------------------------------------------------------------
-	SUBROUTINE q_peak(A,Q,xIa,P,tc,j,qp,tp)
+	SUBROUTINE q_peak(Area,Q,xIa,P,tc,j,qp,tp)
 C --------------------------------------------------------------
 C	SCS-TR55 peak flow calculation
 C --------------------------------------------------------------
@@ -53,10 +53,10 @@ C -- Import Ia/P and storm type I,IA,II,III (j=1,4) ------------
 C --- Unit q peak, qp (m3/s) -----------------------------------
 	qu=4.3046d0*10.d0**(C0+C1*dlog10(tc)+C2*(dlog10(tc))**2-6.d0)
 	Fp=1.d0
-	qp=qu*A*Q*Fp
+	qp=qu*Area*Q*Fp
 
 C -- Unit hydrograph time to peak (min) ------------------------
-	tp=0.127481d0*Q*A/qp/60.d0
+	tp=0.127481d0*Q*Area/qp/60.d0
 100	FORMAT(5f9.3)
 	RETURN
 	END SUBROUTINE q_peak

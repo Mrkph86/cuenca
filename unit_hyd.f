@@ -1,5 +1,5 @@
 C --------------------------------------------------------------
-	SUBROUTINE unit_hyd(Q,A,qp,tp,D,tc,qp5,tp5,mref)
+	SUBROUTINE unit_hyd(Q,Area,qp,tp,D,tc,qp5,tp5,mref)
 C --------------------------------------------------------------
 C Unit NRCS hydrograph using Haan's equation (k=3.77)
 C --------------------------------------------------------------
@@ -27,7 +27,7 @@ C ---rmc 04/20/03 - Fix for Q=0
 c	IF(Q.le.0) THEN
 c	ttotal=D
 c	ELSE
-c	ttotal=0.6375d0*Q*A/qp/60.d0
+c	ttotal=0.6375d0*Q*Area/qp/60.d0
 c	END IF
 C ---rmc 04/20/03 - END of fix for Q=0
 c	dt=ttotal/50.d0
@@ -40,7 +40,7 @@ c   qi=qp*(t/tp*dexp(1-t/tp))**ck
 c	END IF
 c	rot(i+1)=t
 c	roq(i+1)=qi
-c   qdepth=qi*360.d0/A
+c   qdepth=qi*360.d0/Area
 c   WRITE(2,100)t,qi,qdepth
 c10	CONTINUE
 C ----- END of uh v2.x calculations----------------
@@ -54,7 +54,7 @@ C ---since tp=0.6tc+Def/2 --> IF Def<>1/3tp --> Def<>0.24tc
 205	FORMAT(' SCS ',f4.1,'-min unit hydrograph',/,
      C ' time (h)    q(m3/s)   q(mm/h)',/,30('-'))
       tp5=0.6d0*tc+0.5d0*Def
-      qp5=0.127481d0*A/(tp5*60.d0)
+      qp5=0.127481d0*Area/(tp5*60.d0)
 C -- SCS triangular hydrograph---
 c     ttotal5=2.67d0*tp5
 C ---SCS aDIMENSIONal unit hydrograph
@@ -74,7 +74,7 @@ C -------------------------------
       END IF
       u(i+1,1)=t5
       u(i+1,2)=qi5
-      qdepth5=qi5*360.d0/A !Explanation, to obtain q in (mm/h)
+      qdepth5=qi5*360.d0/Area !Explanation, to obtain q in (mm/h)
       cqdepth5=qdepth5+cqdepth5
       !WRITE(*,'(3f10.4)')(u(i+1,j),j=1,2),qdepth5 !MAC 04/10/12
       i=i+1

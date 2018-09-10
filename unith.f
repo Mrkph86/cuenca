@@ -43,7 +43,7 @@ C FX1:	 1 Hour						                                                   C
 C FX3:	 3 Hour					                                                       C		
 C FX6:	 6 Hour					                                                       C		
 C FX24:   24 Hour		                                                                   C					
-C DAOPT: User-specified depht-area factor				                                   C				
+C IDAOPT: User-specified depht-area factor				                                   C				
 C TIME1: Time for Beginning of results (hrs)			                                   C					
 C TIME2: Time for End of results (hrs)                                                   C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
@@ -51,8 +51,8 @@ C ------------------------------------------------------------------------
 C   DECLARE VARIABLES
 C ------------------------------------------------------------------------    
       IMPLICIT DOUBLE PRECISION (a-h, o-z)
-      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)! TEST 2.21.18
-      !DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
+!      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)! TEST 2.21.18
+      DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
 !      DIMENSION A(600) ! A and B are just a number in untih -  A and B should not have dimension 9.5.18 
 !      DIMENSION B(600) ! added 9.4.2018
 !      COMMON/BLK1/SS
@@ -89,9 +89,9 @@ C..READ DATA INPUT
 C...OPO...NA was added to make references to the number of stream to be simulated
       !! READ(NDAT,*)NA,KTYPE,XL,XLCA,HH,XN,AREA,VSL,KODE1,BASCON,SLP,
       !!C  R5,R30,R1,R3,R6,R24,KSOIL,PV,PF,PM,PD,
-      !!C  FX5,FX30,FX1,FX3,FX6,FX24,DAOPT,TIME1,TIME2
+      !!C  FX5,FX30,FX1,FX3,FX6,FX24,IDAOPT,TIME1,TIME2
       READ(NDAT,*)NA,KTYPE,XL,XLCA,HH,XN,AREA,VSL,KODE1,BASCON,SLP, ! TEST 2.16.18
-     C  KSOIL,PV,PF,PM,PD,DAOPT,TIME1,TIME2
+     C  KSOIL,PV,PF,PM,PD,IDAOPT,TIME1,TIME2
       READ(RAN,*) ZN1R, ZN2R, KODER
       IF(ZN1R.EQ.ZN1.AND.ZN2R.EQ.ZN2.AND.KODER.EQ.KODE) THEN ! TEST 2.16.18
       READ(RAN,*)R5,R30,R1,R3,R6,R24,FX5,FX30,FX1,FX3,FX6,FX24
@@ -103,7 +103,7 @@ c 02/01/18      READ(NDAT,*)KTYPE,XL,XLCA,HH,XN,AREA,VSL,KODE1,BASCON,SLP,
 c 02/01/18 R5,R30,R1,R3,R6,R24,SS,KSTORM,KSOIL,PV,PF,PM,PD,NUT,
 c 02/01/18 M.P. -Added SS,KSTORM and NUT
 c 02/01/18     C R5,R30,R1,R3,R6,R24,SS,KSTORM,KSOIL,PV,PF,PM,PD,NUT !Added SS,KSTORM c02/01/18and NUT
-c 02/01/18     C FX5,FX30,FX1,FX3,FX6,FX24,DAOPT,TIME1,TIME2
+c 02/01/18     C FX5,FX30,FX1,FX3,FX6,FX24,IDAOPT,TIME1,TIME2
 C ------------------------------------------------------------------------      
       SS=SS1 ! M.P. ---------------  
       AX=AREA
@@ -112,10 +112,10 @@ C ------------------------------------------------------------------------
 C OPO This line was added to clear the hydrograph H
 C before the next hydrograph in another node.
       DO 15 I=1,440 
-      H(I)=0
+      H(I)=0.D0
 15    CONTINUE 
 c rmc FX=1.
-      IF(DAOPT.EQ.2)GO TO 183
+      IF(IDAOPT.EQ.2)GO TO 183
       
       AREA=AREA/640.
       FX1=.651
@@ -224,10 +224,10 @@ C ------------------------------------------------------------------------
      C 11X,'SPECIFIED PEAK  3-HOUR RAINFALL(INCH) = ',F18.2,/,
      C 11X,'SPECIFIED PEAK  6-HOUR RAINFALL(INCH) = ',F18.2,/,
      C 11X,'SPECIFIED PEAK 24-HOUR RAINFALL(INCH) = ',F18.2,//,
-     C 11X,'HYDROGRAPH MODEL #',11X,' SPECIFIED*')
+     C 11X,'HYDROGRAPH MODEL #',I1,' SPECIFIED*')
 C --------------------------------------------------------------------------
-      IF(DAOPT.EQ.1)WRITE(NUT,6665)
-      IF(DAOPT.EQ.2)WRITE(NUT,6666)
+      IF(IDAOPT.EQ.1)WRITE(NUT,6665)
+      IF(IDAOPT.EQ.2)WRITE(NUT,6666)
       WRITE(NUT,6664)FX5,FX30,FX1,FX3,FX6,FX24
       WRITE(NUT,5000)
 C ----------------------------------------------------------------------
@@ -249,10 +249,12 @@ C ----------------------------------------------------------------------
       IF(KLAG.EQ.4)PLAG=PD
       IF(KLAG.EQ.0)GO TO 98
       CALL SUBSB(TIMLAG,PERCNT,KLAG,NUMBER)
+	PRINT*,'PERCNT=',PERCNT
       IF(NUMBER.GT.NLAG)NLAG=NUMBER
       DO 99 I=1,150
       IF (PERCNT(I).EQ.0.)PERCNT(I)=100.
       H(I)=H(I)+PERCNT(I)*PLAG
+	PRINT*,'H=',H
 99    PERCNT(I)=0.D0
 98    CONTINUE
 C ---------------------------------------------------------------------
@@ -483,6 +485,7 @@ C ------------------------------------------------------------------------
 C ------------------------------------------------------------------------     
 C Print results and estimate mass balances
 C ------------------------------------------------------------------------
+c      print*,"H=",H
       CALL OASB(NUT,KTYPE,H,INTERV,XMAX,UNIT,SUM,TIME1,TIME2)
 !        CALL ADDHY(UNIT,INTERV,NA,H)
 C ------------------------------------------------------------------------
@@ -514,16 +517,13 @@ C ------------------------------------------------------------------------
        RETURN 
        END SUBROUTINE unith
 	  
-C      RMC - 1.30.17 - creating the FUNCTION	  
-	 !FUNCTION RR(A,B,T)
-	 !RR=EXP((A*ALOG(T))+B)
-       !RETURN
-       !END
 C -----------------------------------------------------------------------       
 C RR - FUNCTION !9.4.18     
 C -----------------------------------------------------------------------      
       REAL FUNCTION RR(A,B,T)
-      REAL A,B,T
-      RR= EXP((A*ALOG(T))+B)    
+      IMPLICIT DOUBLE PRECISION (a-h, o-z)
+
+      RR= EXP((A*DLOG(T))+B)    
       RETURN
+ 
       END FUNCTION RR  

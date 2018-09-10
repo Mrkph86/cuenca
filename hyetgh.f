@@ -2,8 +2,8 @@
 C  Disaggregation Daily Precipitation
 !--------------------------------------------------------------------
 C ----------------------------------------------------------------------------
-      SUBROUTINE hyetgh(jstype,P,D,volro,qdepth,vol,qp,A,xIa,rtpeak,er,
-     C          er1,erCoolm,ti,nref,tc,a1,b1,bigE,raimax30,nhyet)
+      SUBROUTINE hyetgh(jstype,P,D,volro,qdepth,vol,qp,Area,xIa,rtpeak,
+     C          er,er1,erCoolm,ti,nref,tc,a1,b1,bigE,raimax30,nhyet)
 C --------------------------------------------------------------
 c      version 3.0.1, Last ModIFied: See ModIFications below
 C      WRITTEN FOR: ASAE'99 Toronto paper, March 8, 2002 
@@ -210,7 +210,7 @@ c** units Rst=N/h
       rro=volro*(qdeph)**(1.d0/3.d0)
       er=0.5d0* rst + 0.35d0*rro
 C rmc 03/28/99- er1 = 9.05d0*(vol*qp)**0.56d0
-      er1 = 9.05d0*(vol*qp)**0.56d0/A
+      er1 = 9.05d0*(vol*qp)**0.56d0/Area
 c**   Cooley (1980) -> er for design storms, EI/100 = R ft tonsf/ac 
 c**                    1/0.67 * R for J/m^2
       erCooly=a1*(P/25.4)**(2.119*rti(ndtime)**0.0086)

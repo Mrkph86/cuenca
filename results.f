@@ -1,6 +1,7 @@
 	
 C --------------------------------------------------------------
-	SUBROUTINE results(P,CN,Q,A,tc,xIa,jstype,D,pL,Y,qp,tp,qdepth,ieroty)
+	SUBROUTINE results(P,CN,Q,Area,tc,xIa,jstype,D,pL,Y,qp,tp,qdepth,
+     &  ieroty)
 C --------------------------------------------------------------
 C	Output summary of hydrology results nicely
 C --------------------------------------------------------------
@@ -24,14 +25,14 @@ C --------------------------------------------------------------
 	WRITE(2,200)stype(jstype)
 	WRITE(2,250)D
 	WRITE(2,300)CN
-	WRITE(2,400)A
+	WRITE(2,400)Area
 	WRITE(2,500)pL
 	WRITE(2,600)Y*100.d0
 	WRITE(2,610)ieroty
 	WRITE(2,*)' '
 	WRITE(2,*)'OUTPUTS'
 	WRITE(2,*)'-------'
-	WRITE(2,700)Q, Q*A*10.d0
+	WRITE(2,700)Q, Q*Area*10.d0
 	WRITE(2,800)xIa
 	WRITE(2,900)tc,tc*60.d0
 	WRITE(2,*)' '

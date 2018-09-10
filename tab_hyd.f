@@ -1,6 +1,6 @@
 	
 C --------------------------------------------------------------
-      SUBROUTINE tab_hyd(Q,A,mref,nref,qp,nhyd,Dstep,NA)
+      SUBROUTINE tab_hyd(Q,Area,mref,nref,qp,nhyd,Dstep,NA)
 C --------------------------------------------------------------
 C Calculation of hydrograph by convolution (Chow, 1987) of SCS unit
 C hydrograph and excess hyetograph
@@ -15,9 +15,9 @@ C                  Gainesville, FL 32611        Raleigh, NC 27695-7625(USA)
 C                  e-mail: carpena@ufl.edu      
 C --------------------------------------------------------------
       IMPLICIT DOUBLE PRECISION (a-h, o-z)
-      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
-      !DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
-!      COMMON/BLK1/SS
+!      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
+      DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
+      COMMON/BLK1/SS
       COMMON/hydgph/u(5000,2),qh(5000,3)
       COMMON/rain/rfix,rti(5000),rfi(5000),rcum(5000,2),ref(5000,2),ncum
       DIMENSION qhstep(600,3)
@@ -25,7 +25,7 @@ C --------------------------------------------------------------
       cqdepth5=0.D0
       DO 40 i=1,mref
 c     WRITE(2,'(2f10.4)')(u(i,j),j=1,2)
-      cqdepth5=u(i,2)*360.d0/A+cqdepth5
+      cqdepth5=u(i,2)*360.d0/Area+cqdepth5
 40    CONTINUE
       dt5=u(2,1)-u(1,1)
       unitq=cqdepth5*dt5
@@ -46,14 +46,14 @@ C ---Apply convolution of the u and ref values to obtained hydrograph
            
       qp=dmax1(qh(k,2),qp)
 70    CONTINUE
-      qdepth=qp*360.D0/A
+      qdepth=qp*360.D0/Area
       qh(1,3)=0.D0
       DO 61 i=2,k-1
       qh(i,3)=qh(i-1,3)+qh(i,2)*3600*Def !MAC 04/10/12 Accumulated (m^3)
 61    CONTINUE
 !      WRITE(*,*)"Hidrograph"
 !      DO 80 i=1,k-1
-!      WRITE(2,'(3f10.4)')(qh(i,j),j=1,2),qh(i,2)*360.d0/A !MAC 04/10/12 (h, m^3/s, mm/h)
+!      WRITE(2,'(3f10.4)')(qh(i,j),j=1,2),qh(i,2)*360.d0/Area !MAC 04/10/12 (h, m^3/s, mm/h)
 !      WRITE(*,*)(qh(i,j),j=1,3)!MAC 04/10/12 (h,m3/s,m^3)
 !80    CONTINUE
       nhyd=k-1

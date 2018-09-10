@@ -1,7 +1,7 @@
 	  
 C --------------------------------------------------------------
-      SUBROUTINE musle(er,er1,erCoolm,ek,Y,pl,cfact,pfact,A,vol,tc,rain,
-     C D,soilty,dp,sconc,sconc1,sconc2,om,aa1,b1,bigE,raimax30,qp)
+      SUBROUTINE musle(er,er1,erCoolm,ek,Y,pl,cfact,pfact,Area,vol,tc,
+     C rain,D,soilty,dp,sconc,sconc1,sconc2,om,aa1,b1,bigE,raimax30,qp)
 C --------------------------------------------------------------
 C      version 3.0.1, Last ModIFied: See ModIFications below
 C      WRITTEN FOR: ASAE'99 Toronto paper, March 8, 2002 
@@ -60,8 +60,8 @@ c     er1=> Williams, units Mg h/ha N
 C --------------------
 c**convert bigE to SI metric - multiply by 1.702 / 100
 c** units Rst=N/h, Runoff volume: vol(m3), volro (mm)
-      volro=vol/(A*10000.d0/1000.d0)
-      qpdepth=qp*360.d0/A
+      volro=vol/(Area*10000.d0/1000.d0)
+      qpdepth=qp*360.d0/Area
       Def=0.24d0*tc
       dtime=Def
       ndtime=D/dtime+1.d0
@@ -69,7 +69,7 @@ c** units Rst=N/h, Runoff volume: vol(m3), volro (mm)
       rst=1.702d0*(bigE/100.d0)*(raimax30/25.4d0/dtime)*dtime/0.5d0
       rro=volro*(qpdepth)**(1.d0/3.d0)
       er=0.5d0* rst + 0.35d0*rro
-      er1 = 9.05d0*(vol*qp)**0.56d0/A
+      er1 = 9.05d0*(vol*qp)**0.56d0/Area
 C rmc03/28/99-- er1 = 9.05d0*(vol*qp)**0.56d0
 C --------------------
 c**   Cooley (1980) -> er for design storms, EI/100 = R ft tonsf/ac 
@@ -80,7 +80,7 @@ C --------------------
       WRITE(10,17)
 17    FORMAT(/,/,1x,'RAINFALL ENERGY FACTOR R FOR EROSION CALCULATIONS')
 c     C  ,'RAINFALL ENERGY FACTOR R FOR EROSION CALCULATIONS')
-      WRITE(10,22) bigE,bigEm,volro,qpdepth,rst,rro,er,A,vol,qp,er1
+      WRITE(10,22) bigE,bigEm,volro,qpdepth,rst,rro,er,Area,vol,qp,er1
 22    FORMAT(/,2x,'a) Foster et al. (1977)',
      C   /,4x,'E=  ',f10.3,' ft-tonf/acre =',f10.3,' MJ/ha',
      C   /,4x,'Volume Runoff=',f10.4,' mm; qpeak =',f10.4,' mm/h',
@@ -195,10 +195,10 @@ C ------------
 	  sconc2=sconc
 	  sconc3=sconc
 	  ELSE
-      sconc= A0*A*10000.d0/vol
-      sconc1=A1*A*10000.d0/vol
-      sconc2=A2*A*10000.d0/vol
-      sconc3=A3*A*10000.d0/vol
+      sconc= A0*Area*10000.d0/vol
+      sconc1=A1*Area*10000.d0/vol
+      sconc2=A2*Area*10000.d0/vol
+      sconc3=A3*Area*10000.d0/vol
 	  END IF
 
 C ----------------------

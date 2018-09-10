@@ -1,6 +1,6 @@
 	
 C---------------------------------------------------------------
-      SUBROUTINE vfsout(dp,ieroty,sconc,sconc1,sconc2,A,pL,qp,tp,
+      SUBROUTINE vfsout(dp,ieroty,sconc,sconc1,sconc2,Area,pL,qp,tp,
      C                  tc,D,ti,nhyet,nhyd)
 C---------------------------------------------------------------
 C      version 3.0.1, Last ModIFied: See ModIFications below
@@ -58,7 +58,7 @@ c----- problem. Issue warning.
 C---------------------------------------------------------------
 c OUTPUT of VFSMOD runoff hydrograph: *.iro
 C---------------------------------------------------------------
-	swidth=A*10000.d0/pL
+	swidth=Area*10000.d0/pL
 	slength=pL
 	WRITE (12,103) swidth,slength
 	nbcroff=nhyd
