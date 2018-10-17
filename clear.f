@@ -1,38 +1,34 @@
-CC PROGRAM 18  ! Based on Hromadka book pag 222
-C -----------------------------------------------------------------------
-!      SUBROUTINE CLEAR(NUT,NDAT)
-      SUBROUTINE CLEAR(SS1,m,n,NUT,NDAT,Hydro,mn1,mn2) ! ARGU = NDAT 9.25.17
-C -----------------------------------------------------------------------
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C THIS SUBROUTINE CLEARS A SPECIFIED STREAM DATA BANK                    C
-C Variables:                                                             C
-C                                                                        C
-C K:	Stream number to be set to 0                                       C
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C -----------------------------------------------------------------------
-C   DECLARE VARIABLES
-C -----------------------------------------------------------------------
-      IMPLICIT DOUBLE PRECISION (a-h, o-z)
-      !COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
-      DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
-      COMMON/BLK1/SS
+C     PROGRAM 18  ! Based on Hromadka book pag 222
+C--------------------------------------------------------------
+      SUBROUTINE CLEAR(NUT,NDAT)
+!    SUBROUTINE clear(SS1,m,n,NDAT,Hydro,mn1,mn2) ! ARGU = NDAT 9.25.17
+C----------------------------------------------------------
+C       THIS SUBROUTINE CLEARS A SPECIFIED STREAM DATA BANK
       DIMENSION A(600)
-!     EXPORT Hydrograph, Date (hours) StreamA(CFS)
-C -----------------------------------------------------------------------
+      ! COMMON/BLK1/SS(600,10)
+! !------------------------------------------------------------------------
+      ! REAL(8),DIMENSION(m,n) :: SS1
+      ! INTEGER,VALUE :: m
+      ! INTEGER,VALUE :: n
+      ! !INTEGER,VALUE :: mn
+      ! ! EXPORT Hydrograph, Date (hours) StreamA(CFS)
+      ! REAL(8),DIMENSION(mn1,mn2) :: Hydro
+      ! INTEGER,VALUE :: mn1
+      ! INTEGER,VALUE :: mn2
+! !------------------------------------------------------------------------
       SS=SS1
 !	CLEAR THE K STREAM IN STREAM MATRIX SS
       READ(NDAT,*)K
       CALL MREAD(K,A)
       DO 30 I=1,600
-30    A(I)=0.D0
+30    A(I)=0.
       CALL MWRITE(K,A)
-C ------------------------------------------------------------------------      
-C OUTPUT
-C ------------------------------------------------------------------------
+C-OUTPUT
+!Now We are not going to WRITE the Flood.ans----------------------------
       WRITE(NUT,101)K
 101   FORMAT(10X,'STREAM NUMBER',I2,' IS SET TO ZERO.')
 C ------------------------------------------------------------------------
-C HYDROGRAPH TO EXPORT
+C Hydrograph to export
 C ------------------------------------------------------------------------      
 !      Hydro(:,2)=A*(0.3048**3)!To obtain in m^3/S
 !      Hydro(600,2)=0

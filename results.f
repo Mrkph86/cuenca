@@ -1,20 +1,21 @@
 	
-C --------------------------------------------------------------
-	SUBROUTINE results(P,CN,Q,A,tc,xIa,jstype,D,pL,Y,qp,tp,qdepth,ieroty)
-C --------------------------------------------------------------
+C---------------------------------------------------------------
+	SUBROUTINE results(P,CN,Q,A,tc,xIa,jstype,D,pL,Y,qp,tp,qdepth,
+     C                   ieroty)
+C---------------------------------------------------------------
 C	Output summary of hydrology results nicely
-C --------------------------------------------------------------
+C---------------------------------------------------------------
 C      version 3.0.1, Last ModIFied: See ModIFications below
 C      WRITTEN FOR: ASAE'99 Toronto paper, March 8, 2002 
 C      Written by: R. Munoz-Carpena (rmc)   &   J. E. Parsons, BAE (jep)
 C                  University of Florida        BAE, NC State University
 C                  Gainesville, FL 32611        Raleigh, NC 27695-7625(USA)
 C                  e-mail: carpena@ufl.edu      
-C --------------------------------------------------------------
+C---------------------------------------------------------------
 	IMPLICIT DOUBLE PRECISION (a-h, o-z)
 	CHARACTER*4 stype(5)
 	DATA stype/'I','IA','II','III','user'/
-C --------------------------------------------------------------
+C---------------------------------------------------------------
 	WRITE(2,*)' '
 	WRITE(2,*)' HYDROGRAPH CALCULATION FOR WATERSHED-SCS METHOD'
 	WRITE(2,*)' '
@@ -35,7 +36,7 @@ C --------------------------------------------------------------
 	WRITE(2,800)xIa
 	WRITE(2,900)tc,tc*60.d0
 	WRITE(2,*)' '
-C --------------------------------------------------------------
+C---------------------------------------------------------------
 100	FORMAT('Storm Rainfall=',f8.2,' mm')
 200	FORMAT('SCS storm type= ',a4)
 250	FORMAT('Storm duration=',f6.1,' h')

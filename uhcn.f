@@ -1,22 +1,24 @@
-C ------------------------------------------------------------------
-C //////////////////////////////////////////////////////////////////
-C /                          SCS METHOD                            /
-C //////////////////////////////////////////////////////////////////
-C ------------------------------------------------------------------
-      SUBROUTINE uhcn (SS1,m,n,PP,m1,n1,NDAT,Hydro1,mn1,mn2) !ARGU = (NUT,NDAT) (2.1.18) 
-C --------------------------------------------------------------
-c  version 3.0.1, Last ModIFied: See ModIFications below
-C  WRITTEN FOR: ASAE'99 Toronto paper, March 8, 2002 
-C  Written by: R. Munoz-Carpena (rmc)   &   J. E. Parsons, BAE (jep)
-C     University of Florida                 BAE, NC State University
-C     Gainesville, FL 32611                 Raleigh, NC 27695-7625(USA)
-C     e-mail: carpena@ufl.edu      
-C --------------------------------------------------------------
+
+!-------------------------------------------------------------
+!//////////////////////////////////////////////////////////////
+!                      SCS METHOD
+!//////////////////////////////////////////////////////////////
+!--------------------------------------------------------------
+	!Greg Kiker attempt to fix uhcn_
+      SUBROUTINE uhcn (SS1,m,n,PP,m1,n1,NDAT,Hydro1,mn1,mn2) !ARGU = (NUT,NDAT) (2.1.18)) 
+C---------------------------------------------------------------
+c      version 3.0.1, Last ModIFied: See ModIFications below
+C      WRITTEN FOR: ASAE'99 Toronto paper, March 8, 2002 
+C      Written by: R. Munoz-Carpena (rmc)   &   J. E. Parsons, BAE (jep)
+C                  University of Florida        BAE, NC State University
+C                  Gainesville, FL 32611        Raleigh, NC 27695-7625(USA)
+C                  e-mail: carpena@ufl.edu      
+C---------------------------------------------------------------
 C Program to create input files for VFSmod, based on NRCS-TR55 and Haan
 C et al, 1996, with additional work DOne on coefficients for unit peak
 C flow calculation.
 c
-c    Date      Modification                                 Initials
+c    Date      ModIFication                                Initials
 c   -------    ------------------------------                ------ 
 c   2/17/99    Check for 0.1<Ia/P<0.5                           rmc
 c   2/18/99    Added hyetograph output for 6 h storm            jep
@@ -60,12 +62,13 @@ c              v2.4.1
 c   09/15/11   Rewritten hydrograph calculation using convolution
 c              of excess rain steps, v3.0.0                     rmc
 c   02/15/12   Added user table for 24-h hyetograph, v3.0.1     rmc
-C --------------------------------------------------------------
-c Compiling for Win32 and Unix environments:
+c
+c---------------------------------------------------------------
+c    Compiling for Win32 and Unix environments:
 c       1. The i/o for these operating systems is dIFferent.
 c       2. Change the comments in the finput.f program to reflect
 c          your operating system.   3/9/00
-C --------------------------------------------------------------
+c---------------------------------------------------------------
 c COMMON/hydgph:
 c       rot(208), runoff time (units)
 c       roq(208), runoff rate (m3/s)
@@ -78,102 +81,108 @@ c       rcum(100,2), cumm rainfall (mm)
 c       ref(100), excess rainfall intensity (mm/h)
 c       ncum: number of steps IF user hyetograph is read
 c other:
-c       nref  = number of excess hyetograph steps
-c       mref  = number of unit hydrograph steps
-c       nhyet = number of hyetograph steps
-c       vol(m3), volro (mm) = runoff volume 
-C -----------------------------------------------------------------------
-C   DECLARE VARIABLES
-C -----------------------------------------------------------------------
+c       nref=number of excess hyetograph steps
+c       mref=number of unit hydrograph steps
+c       nhyet=number of hyetograph steps
+c       vol(m3), volro (mm)=runoff volume 
+C---------------------------------------------------------------
 	IMPLICIT DOUBLE PRECISION (a-h, o-z)
-!	COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
-      DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
-      DIMENSION A(600)
-      COMMON/BLK1/SS
-	COMMON/hydgph/u(5000,2),qh(5000,3)
-	COMMON/rain/rfix,rti(5000),rfi(5000),rcum(5000,2),ref(5000,2),ncum
 	CHARACTER*20 soilty
 	CHARACTER*75 LISFIL(6)
-C      DIMENSION PP(m1,n1)
-C ------------------------------------------------------------------
-C  Get inputs and open files
-C ------------------------------------------------------------------
+	COMMON/BLK1/SS(600,10), Hydro(600,3)
+	COMMON/hydgph/u(5000,2),qh(5000,3)
+	COMMON/rain/rfix,rti(5000),rfi(5000),rcum(5000,2),ref(5000,2),ncum
+      REAL(8),DIMENSION(m,n) :: SS1
+      INTEGER,intent( in ) :: m
+      INTEGER,VALUE :: n
+      !INTEGER,VALUE :: mn
+      REAL(8),DIMENSION(mn1,mn2) :: Hydro1
+      INTEGER,VALUE :: mn1
+      INTEGER,VALUE :: mn2
+      REAL(8),DIMENSION(m1,n1) :: PP
+      INTEGER,VALUE :: m1
+      INTEGER,VALUE :: n1
+c------------------------------------------
+c  get inputs and open files
+c------------------------------------------
 !	CALL  FINPUT(LISFIL)
 !	CALL getinp(P,CN,A,jstype,D,pL,Y,ek,cfact,pfact,soilty,
 !     1            ieroty,dp,om)
 	SS=SS1
 	Hydro=Hydro1
-      READ(NDAT,*)NA,P,CN,A,jstype,D,pL,Y,Dstep,ek,cfact,pfact,dp,    ! (9.25.17)
-     C ieroty                                                       ! (9.25.17)
+      READ (NDAT,*)NA,P,CN,A,jstype,D,pL,Y,Dstep,ek,cfact,pfact,dp,    ! (9.25.17)
+     C ieroty                                                          ! (9.25.17)
 	!!Dstep=time step (h) MAC 04/10/12
 	!!Check in hydrograph definition Def=k*tc
+	
 	!!USLE FACTORS
-C ------------------------------------------------------------------	
-C   ieroty = select method to estimate storm erosion
-C            Selections:
-C          0 or not present = Foster's method for R-factor
-C          1 = Using Williams R-factor
-C          2 = Using R-factor from GLEAMS with daily rainfall
-C	om = 2.0d0
-c     om = % organic matter, read IF ek <0
+c-  ieroty = select method to estimate storm erosion
+c-           Selections:
+c-         0 or not present = Foster's method for R-factor
+c-         1 = Using Williams R-factor
+c-         2 = Using R-factor from GLEAMS with daily rainfall
+	om = 2.0d0
+c om = % organic matter, read IF ek <0
 	!rcum(1,1) !storm definition (rcum)
-C - For user defined case, read "tmid" first and THEN 24-h P/P24 curve
-C - "tmid" is stored in first position of the rcum(i,j) array
-C ------------------------------------------------------------------
-C  Calculate runoff volume by SCS method
-C ------------------------------------------------------------------
+c-- For user defined case, read "tmid" first and THEN 24-h P/P24 curve
+c-- "tmid" is stored in first position of the rcum(i,j) array
+c--------------------------
+c Calculate runoff volume by SCS method
+c--------------------------
 	CALL runoff(P,CN,xIa,Q) !OK
 	volro=Q
-    !WRITE(*,*)Q
+      !WRITE(*,*)Q
       IF (Q>0) THEN
-C ------------------------------------------------------------------
-C  Calculate concentration time by SCS method
-C ------------------------------------------------------------------
+c--------------------------
+c Calculate concentration time by SCS method
+c--------------------------
 	CALL calctc(pL,CN,Y,tc) !OK
-C ------------------------------------------------------------------
-C  Calculate peak flow and time by SCS-TR55 method
-C ------------------------------------------------------------------
+c--------------------------
+c Calculate peak flow and time by SCS-TR55 method
+c--------------------------
 	CALL q_peak(A,Q,xIa,P,tc,jstype,qp,tp) !OK
-C ------------------------------------------------------------------
-C  Output hydrology results
-C ------------------------------------------------------------------
+c--------------------------
+c Output hydrology results
+c--------------------------
 !MAC 04/10/12 We DO not PRINT any result
 !	CALL results(P,CN,Q,A,tc,xIa,jstype,D,pL,Y,qp,tp,qdepth,
 !     1             ieroty)
-C ------------------------------------------------------------------
-c  Calculate SCS-unit hydrograph
-C ------------------------------------------------------------------
+c--------------------------
+c Calculate SCS-unit hydrograph
+c--------------------------
 	CALL unit_hyd(Q,A,qp,tp,D,tc,qp5,tp5,mref)
-C ------------------------------------------------------------------
-c  Calculate storm hyetograph from SCS storm type
-C ------------------------------------------------------------------
+c--------------------------
+c Calculate storm hyetograph from SCS storm type
+c--------------------------
  	CALL hyetgh(jstype,P,D,volro,qdepth,vol,qp,A,xIa,rtpeak,er,er1,
-     C            erCoolm,ti,nref,tc,a1,b1,bigE,raimax30,nhyet)
-C ------------------------------------------------------------------
-c  Calculate storm hydrograph
-C ------------------------------------------------------------------
+     1            erCoolm,ti,nref,tc,a1,b1,bigE,raimax30,nhyet)
+
+c--------------------------
+c Calculate storm hydrograph
+c--------------------------
       CALL tab_hyd(Q,A,mref,nref,qp,nhyd,Dstep,NA)
       ELSE
       DO 63 iii=1,600
-        Hydro(iii,2)=0
-        Hydro(iii,1)=iii*Dstep
-	!WRITE(*,*) Hydro(iii,1), Hydro(iii,2)
+      Hydro(iii,2)=0
+      Hydro(iii,1)=iii*Dstep
+	  !WRITE(*,*) Hydro(iii,1), Hydro(iii,2)
 63    CONTINUE
       END IF
-!      SS1=SS    !9.4.2018
-!	Hydro1=Hydro ! why again bak to hydro1 to hydro 9.4.2018
-C ------------------------------------------------------------------
-C DO the modIFied usle to get erosion stuff
-C ------------------------------------------------------------------
+	SS1=SS
+	Hydro1=Hydro
+c--------------------------
+c DO the modIFied usle to get erosion stuff
+c--------------------------
 !MAC 04/10/12
 !      CALL musle(er,er1,erCoolm,ek,Y,pl,cfact,pfact,A,vol,tc,P,D,soilty,
-!     C           dp,sconc,sconc1,sconc2,om,a1,b1,bigE,raimax30,qp)
-C ------------------------------------------------------------------
-C WRITE vfsmod compatible input files
-C ------------------------------------------------------------------
-C MAC 04/10/12
+!     1           dp,sconc,sconc1,sconc2,om,a1,b1,bigE,raimax30,qp)
+
+c------------------------------------
+c WRITE vfsmod compatible input files
+c------------------------------------
+!MAC 04/10/12
 !      CALL vfsout(dp,ieroty,sconc,sconc1,sconc2,A,pL,qp,tp,tc,D,ti,
-!     C           nhyet,nhyd)
+!     1           nhyet,nhyd)
 
 	!close(1) !MAC 04/10/12
 	!close(2) !MAC 04/10/12

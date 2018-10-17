@@ -1,49 +1,45 @@
 !     PROGRAM 18  ! Based on Hromadka book pag 222
-C -----------------------------------------------------------------------
-!      SUBROUTINE SPLIT(NUT,NDAT)
-      SUBROUTINE SPLIT(SS1,m,n,NUT,NDAT,Hydro,mn1,mn2)   ! ARGU = NDAT (9.25.17)
-C -----------------------------------------------------------------------
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C THIS SUBROUTINE SPLITS STREAM "A" INTO STREAM "A" AND STREAM "B"           C
-C VARIABLES:                                                                 C
-C NA:  Stream "A" number. This stream is the one to be modeled               C				
-C NB:  Stream "B" number [0 for moving the excess flow from stream "A"       C
-C      to a permanent storage; 1 for moving excess flow from                 C
-C 	   stream "A" to stream "B"].								             C
-C PB:  Percentage (decimal) of stream to be diverted	                     C					
-C TIME1:  Time for Beginning of results (hrs)			                     C					
-C TIME2:  Time for End of results (hrs)                                      C
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC       
-C -----------------------------------------------------------------------
-C   DECLARE VARIABLES
-C ----------------------------------------------------------------------- 
-      IMPLICIT DOUBLE PRECISION (a-h, o-z)
+C--------------------------------------------------------------
+      SUBROUTINE SPLIT(NUT,NDAT)
+!      SUBROUTINE split(SS1,m,n,NDAT,Hydro,mn1,mn2)   ! ARGU = NDAT (9.25.17)
+!--------------------------------------------------------
+C       THIS SUBROUTINE SPLITS STREAM A INTO STREAM A AND STREAM B
+C-VARIABLES:
+C       PB=DECIMAL PERCENTAGE OF STREAM A TO BE ADDED TO STREAM B
+C       NA.NB = STREAM NUMBERS
+C-MEMORY ALLOCATION
       DIMENSION A(600),B(600)
- !     COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
-      DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
-      COMMON/BLK1/SS
-!     EXPORT Hydrograph, Date (hours) StreamA(CFS)
+!      COMMON/BLK1/SS(600,10)
+! !------------------------------------------------------------------------
+      ! REAL(8),DIMENSION(m,n) :: SS1
+      ! INTEGER,VALUE :: m
+      ! INTEGER,VALUE :: n
+      ! !INTEGER,VALUE :: mn
+      ! ! EXPORT Hydrograph, Date (hours) StreamA(CFS)
+      ! REAL(8),DIMENSION(mn1,mn2) :: Hydro
+      ! INTEGER,VALUE :: mn1
+      ! INTEGER,VALUE :: mn2
 C ------------------------------------------------------------------------
       SS=SS1
 C ------------------------------------------------------------------------
-C   INITIALIZE VARIABLES
+C-INITIALIZE VARIABLES
 C ------------------------------------------------------------------------
-      TIME=0.D0
+      TIME=0.
 C ------------------------------------------------------------------------
-C   READ INPUT DATA
+C-READ INPUT DATA
 C ------------------------------------------------------------------------
       READ(NDAT,*)NA,NB,PB,TIME1,TIME2 !(9.25.17)
       NOUT1=TIME1*12.+.01
       NOUT2=TIME2*12.+.01
-C ------------------------------------------------------------------------
+!Now We are not going to  		WRITE the Flood.ans----------------------------
       WRITE(NUT,901)NA,NB
-901   FORMAT(/,10X,'MODEL STREAM SPLITFLOW WHERE A CONSTANT PROPORTION'
+901   FORMAT(//,10X,'MODEL STREAM SPLITFLOW WHERE A CONSTANT PROPORTION'
      C ,/,10X,'OF STREAM',I2,' IS ADDED TO STREAM',I2,' :',//)
 C ------------------------------------------------------------------------
-C   GRAPHICS
+C-GRAPHICS
 C ------------------------------------------------------------------------
       PA=1.-PB
-C ------------------------------------------------------------------------
+!Now We are not going to  		WRITE the Flood.ans----------------------------
       WRITE(NUT,921)NB,NA,PB,NA
 921   FORMAT(                              
      C 20X,'    INFLOW               INFLOW',/,
@@ -56,11 +52,11 @@ C ------------------------------------------------------------------------
      C 27X,'|',19X,'|',/,27X,'|',19X,'|',/,
      C 27X,'|',19X,'|',/,
      C 27X,'V',19X,'V',/,24X,'STREAM:',I2,12X,'(',F6.3,')(STREAM:',I2,
-     C')',/,20X,'+ (',F6.3,')(STREAM:',I2,')',//) 
+     C')',/,20X,'+ (',F6.3,')(STREAM:',I2,')',///) 
       WRITE(NUT,903)NA,NB,PA,NA,PB,NB
-903   FORMAT(11x,'STREAM NUMBER:',I2,' IS SPLIT TOWARDS STREAM:',I2,/,
-     C 11X,'WHERE',F6.2,' (DECIMAL PERCENT) REMAINS IN STREAM: ',I2,/,
-     C 11X,'AND ',F6.2,'  (DECIMAL PERCENT) IS ADDED TO STREAM:',I2)
+903   FORMAT(/,11x,'STREAM NUMBER:',I2,' IS SPLIT TOWARDS STREAM:',I2,/,
+     C 11X,'WHERE ',F6.23,' (DECIMAL PERCENT) REMAINS IN STREAM',
+     C I2,/,11X,'AND ',F6.3,' (DECIMAL PERCENT) IS ADDED TO STREAM:',I2)
       WRITE(NUT,905)NB,NA,NB,NA
 905   FORMAT(//,22X,'STREAM SPLITFLOW MODELING RESULTS:',//,
      C 11X,' MODEL    INFLOW      INFLOW      OUTFLOW     OUTFLOW',/,
@@ -72,7 +68,7 @@ C ------------------------------------------------------------------------
       CALL MREAD(NA,A)
       CALL MREAD(NB,B)
 C ------------------------------------------------------------------------
-C   MODEL SPLITFLOW
+C MODEL SPLITFLOW
 C ------------------------------------------------------------------------
       NUMBER=A(600)
       IF(PB.EQ.0.)GO TO 1000
@@ -84,7 +80,7 @@ C ------------------------------------------------------------------------
       A(I)=A(I)-X
       TIME=TIME+.08333
       IF(I.LT.NOUT1.OR.I.GT.NOUT2)GO TO 100
-C ------------------------------------------------------------------------
+!Now We are not going to  		WRITE the Flood.ans----------------------------
       WRITE(NUT,906)TIME,BIN,AIN,B(I),A(I)
 906   FORMAT(10X,F7.3,3X,4(F8.1,4X))
 100   CONTINUE
@@ -97,7 +93,7 @@ C ------------------------------------------------------------------------
 1100  A(I)=B(I)
       CALL MWRITE(NB,B)
 C ------------------------------------------------------------------------
-C   HYDROGRAPH TO EXPORT
+C Hydrograph to export
 C ------------------------------------------------------------------------
 !      Hydro(:,2)=A*(0.3048**3)!To obtain in m^3/S
 !      Hydro(600,2)=0

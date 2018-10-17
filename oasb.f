@@ -1,17 +1,17 @@
 C     PROGRAM 14 - Based on Hromadka book pag 167
-C ----------------------------------------------------------------------
+c -----------------------------------------------------------
       SUBROUTINE OASB (NUT,KTYPE,H,INTERV,XMAX,UNIT,SUM,TIME1,TIME2)
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C INTEGER LETM,BLANK,DOT,CROSS,DASH,LINE(41)                             C
-C To compile with gfortran is necesary to declare these variables as     C
-C CHARACTER instead of INTEGER                                           C
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-      IMPLICIT DOUBLE PRECISION (a-h, o-z)
-c      INTEGER LETM,BLANK,DOT,CROSS,DASH,LINE(41)
+c -----------------------------------------------------------
+! INTEGER LETM,BLANK,DOT,CROSS,DASH,LINE(41) 
+! To compile with gfortran is necesary to declare these variables as
+! CHARACTER instead of INTEGER
+c -----------------------------------------------------------
+      INTEGER LETM,BLANK,DOT,CROSS,DASH,LINE(41)
+	  !CHARACTER*1 LETM,BLANK,DOT,CROSS,DASH,LINE(41) !this line is dIFferent from the book
       DIMENSION H(440)
-	CHARACTER*1 LETM,BLANK,DOT,CROSS,DASH,LINE(41) !this line is different from the book
+c rmc       COMMON/NUT/NUT
       DATA LETM,BLANK,DOT,CROSS,DASH,LINE/'V',' ','.','Q','I',41*' '/
-C ----------------------------------------------------------------------
+c
 c rmc 5050  FORMAT (1X,A1)
       WRITE(NUT,101)
       WRITE(NUT,130)
@@ -38,8 +38,8 @@ c rmc 100   CONTINUE
       WRITE(NUT,105)T0,T1,T2,T3,XMAX
 105   FORMAT(3X,'TIME(HRS)  VOLUME(AF)  Q(CFS)  ',F3.0,1X,4F10.1)
       WRITE(NUT,130)
-      XMASS=0.D0
-C ------------------------------------------------------------------------
+      XMASS=0.
+c
       GO TO(141,142,143,146,147,148),KTYPE 
 141   KNUM=1
       GO TO 144
@@ -53,9 +53,9 @@ C ------------------------------------------------------------------------
       GO TO 144
 148   KNUM=12
 144   TIME=0
-C ------------------------------------------------------------------------
+C -----------------------------------------------------------------
 C     Output Graph Loop
-C ------------------------------------------------------------------------
+C -----------------------------------------------------------------
       DO 200 I=1, INTERV
       TEST=H(I)*F
       XMASS=XMASS+H(I)*STEP
@@ -89,10 +89,10 @@ c rmc 320   DO 350 K=1, KNUM
 215   LINE(J)=BLANK
       LINE(JMASS)=BLANK
 200   CONTINUE
-C ------------------------------------------------------------------------
+!Now We are not going to WRITE the Flood.ans----------------------------
       WRITE(NUT,130)
 !      WRITE(NUT,989)
 989   FORMAT(/)
-C ------------------------------------------------------------------------
+!--END----!Now We are not going to WRITE the Flood.ans--------------------
       RETURN
       END SUBROUTINE OASB

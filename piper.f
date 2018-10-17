@@ -1,28 +1,21 @@
-C   PROGRAM 20 - Based on Hromadka book 237 pag.        
-C -----------------------------------------------------------------------
-!      SUBROUTINE PIPER(NUT,NDAT)
-      SUBROUTINE piper(SS1,m,n,NUT,NDAT,Hydro,mn1,mn2) !ARGU = NDAT (9.25.17)
-C -----------------------------------------------------------------------
+C PROGRAM 20 - Based on Hromadka book 237 pag.        
+C  ----------------------------------------------------------------------
+      SUBROUTINE PIPER(NUT,NDAT)
+!      SUBROUTINE piper(SS1,m,n,NDAT,Hydro,mn1,mn2) !ARGU = NDAT (9.25.17)
+! C ------------------------------------------------------------------------
+      ! REAL(8),DIMENSION(m,n) :: SS1
+      ! INTEGER,VALUE :: m
+      ! INTEGER,VALUE :: n
+      ! ! REAL(8),DIMENSION(mn) :: ARGU ! (9.25.17)
+      ! !INTEGER,VALUE :: mn
+      ! ! EXPORT Hydrograph, Date (hours) StreamA(CFS)
+      ! REAL(8),DIMENSION(mn1,mn2) :: Hydro
+      ! INTEGER,VALUE :: mn1
+      ! INTEGER,VALUE :: mn2
 C ----------------------------------------------------------------------
-C  THIS SUBROUTINE PERFORMS NORMAL DEPTH ROUTING
+C- THIS SUBROUTINE PERFORMS NORMAL DEPTH ROUTING
 C ----------------------------------------------------------------------
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C NA: Stream "A" number. This stream is the one to be modeled						 C 	
-C XL: Piper length - the length of the  longest watercourse (FEET) 			         C 			
-C XN: Basin Factor (Manning's Friction Factor) [0.008 - 0.999]                       C 		
-C E1: Upstream elevation (m) [-30 to 3000]							                 C 
-C E2: Downstream elevation (m) [-60 to 3000]							             C 
-C D:  Piper diameter (m) [0.3-30]							                         C 
-C TIME1:  Time for Beginning of results (hrs)							             C 
-C TIME2:	Time for End of results (hrs)                                            C 
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C -----------------------------------------------------------------------
-C   DECLARE VARIABLES
-C -----------------------------------------------------------------------
-      IMPLICIT DOUBLE PRECISION(A-H,O-Z) !(8.28.18)
-!      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
-      DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)      
-      COMMON/BLK1/SS
+!      COMMON/BLK1/SS(600,10)
       COMMON/BLK10/B(600)
       DIMENSION F(21,2)
       DIMENSION A(600)                                          
@@ -30,19 +23,17 @@ C -----------------------------------------------------------------------
      C  .8,.85,.9,.95,1.,0.,.52,.63,.715,.78,.832,.88,.912,
      C  .945,.97,1.,1.025,1.045,1.06,1.08,1.095,1.11,1.12,1.13,
      C  1.136,1.14/
-!     EXPORT Hydrograph, Date (hours) StreamA(CFS)
 C ----------------------------------------------------------------------
       SS=SS1
 C ----------------------------------------------------------------------
       READ(NDAT,*)NA,XL,XN,E1,E2,D,TIME1,TIME2 
-C -----------------------------------------------------------------------
-C   CONVERSION - To convert in m^3/S
-C -----------------------------------------------------------------------
+C ----- Conversions-----------------------------------------------------
 !      XL=XL/0.3048 !To convert in m^3/S
 !      E1=E1/0.3048
 !      E2=E2/0.3048
 !      D=D/0.3048
 C ----------------------------------------------------------------------
+!Now We are not going to WRITE the Flood.ans----------------------------
       WRITE(NUT,901)NA
 901   FORMAT(/,11X,'MODEL PIPEFLOW ROUTING OF STREAM',I2,' WHERE',
      C /,11X,'STORAGE EFFECTS ARE NEGLECTED WITHIN THE PIPE, FLOW',/,
@@ -57,13 +48,13 @@ c rmc 305     WRITE(NUT,306)XL,XN,E1,E2,D
      C 20X,'DOWNSTREAM ELEVATION(FT) = ',F8.2,/,
      C 20X,'PIPE DIAMETER(FT) = ',F15.2,/)
 C ----------------------------------------------------------------------
-C INITIALIZE VARIABLES
+C-INITIALIZE VARIABLES
 C ----------------------------------------------------------------------
       DO 10 I=1,600
-10    B(I)=0.D0
+10    B(I)=0.
       CALL MREAD(NA,A)
-      TIME=0.D0
-      STORE=0.D0
+      TIME=0.
+      STORE=0.
       S=SQRT((E1-E2)/XL)
       QCAP=35.628/XN*.013*S*D**2.6667
       NUMBER=A(600)
@@ -83,8 +74,8 @@ C ----------------------------------------------------------------------
       !MAC 4/9/12 Next conditional is to consider IF before the hydrograph
       !there are records with value=0
       !IF (Q.EQ.0.AND.I.LT.NUMBER) THEN
-      !B(I)=0
-      !GO TO 550
+      !   B(I)=0
+      !   GO TO 550
       !END IF
       IF(Q.LT.QCAP.AND.STORE.LE.0.)GO TO 510
 C ----------------------------------------------------------------------
@@ -95,8 +86,8 @@ C ----------------------------------------------------------------------
       Q=QCAP
       IF(STORE.GE.0.)GO TO 520
       Q=QCAP+STORE*145.2
-      STORE=0.D0
-C ---------------------------------------------------------------------
+      STORE=0.
+C----------------------------------------------------------------------
 C OPEN FLOW
 C ----------------------------------------------------------------------
 510   QQ=Q/QCAP
@@ -135,7 +126,7 @@ C     BECAUSE IT IS WRITING EXTRANGES PEAKS AFTER THE HYDROGRAPH FINISH
 !     WRITE(*,*) A(I)
 !715  CONTINUE
 C ------------------------------------------------------------------------
-C HYDROGRAPH TO EXPORT
+C Hydrograph to export
 C ------------------------------------------------------------------------
 !      Hydro(:,2)=A
 !      Hydro(:,2)=A*(0.3048**3) !To convert in m^3/s

@@ -3,18 +3,15 @@
 C  ----------------------------------------------------------------------
       SUBROUTINE ADDHY(UNIT,INTERV,NA,H)
 C  ----------------------------------------------------------------------
-C     *USED FOR CUENCA ROUTING SYSTEM ONLY*
+C     *USED FOR FLOOD ROUTING SYSTEM ONLY*
 C     TRANSFORMS SUBROUTINE UNITH FOR USE WITH THE FLOOD SYSTEM
 C     JUST INSERT CALL TO ADDHY AT END OF SUBROUTINE UNITH
 C     IMMEDIATELY PRECEEDING CALL TO OABS
 C     ADD RUNOFF HYDROGRAPH TO A STREAM
-C -----------------------------------------------------------------------
-C MEMORY ALLOCATION
-C -----------------------------------------------------------------------
-      IMPLICIT DOUBLE PRECISION (a-h, o-z)
+C  ----------------------------------------------------------------------
       DIMENSION H(440)
       DIMENSION AA(600)
-C -----------------------------------------------------------------------
+C
       CALL MREAD(NA,AA)
       NUMX=UNIT/5.+.01
       IF(NUMX-2)751,752,753

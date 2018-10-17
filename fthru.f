@@ -1,52 +1,48 @@
 C PROGRAM 16 ! Based on Hromadka book pag 210
 C ------------------------------------------------------------
-      SUBROUTINE fthru(SS1,m,n,NUT,NDAT,Hydro,mn1,mn2,mn3) ! 
-!     SUBROUTINE fthru(NUT,NDAT) ! From the book (8.29.18)
-C ------------------------------------------------------------	  
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C THIS SUBROUTINE ROUTS FLOW THROUGH A FLOW THRU BASIN                               C 
-C USING FIVE-MINUTE INTERVALS.  EXPLICIT ALGORITHM IS USED.                          C 
-C VARIABLES:                                                                         C 
-C ***** Line 1: NA,DEADS,S0,V0,NBASIN,TIME1,TIME2 *****                              C 	
-C NA:    	Stream "A" number. This stream is the one to be modeled                  C		
-C DEADS:  Dead storage volume (m^3)                                                  C
-C S0:    	Initial dead storage volume (m^3)                                        C
-C V0:    	Initial basin volume (above PL of outlet) (m^3)                          C			
-C NBASIN:    Number of basin data points (zero at D=0).                              C
-C            Allowable values [4 – 20]                                               C		
-C TIME1:    	Time for Beginning of results (hrs)                                C					
-C TIME2:	    Time for End of results (hrs)                                        C					
-C ***** Line 2: BD(I),BQ(I),BV(I),I=1,NBASIN *****                                   C							
-C BD(I):    	Basin Depth (m). Allowable values [0-76]                           C			
-C BQ(I):    	Basin outflow (m^3/s). Allowable values [0-2831]                   C					
-C BV(I):    	Basin Volume (m^2-m=m^3). Allowable values [0-123348184 m^3]       C						
-C I=1    									                         C
-C NBASIN:	Number of basin data points (zero at D=0).                               C
-C            Allowable values [4 – 20]	                                           C
-CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
+      !SUBROUTINE fthru(SS1,m,n,NDAT,Hydro,mn1,mn2,mn3) ! ARGU = NDAT (9.25.17)
+      SUBROUTINE fthru(NUT,NDAT) ! From the book 
+C ------------------------------------------------------------
+C-THIS SUBROUTINE ROUTS FLOW THROUGH A FLOW THRU BASIN
+C-USING FIVE-MINUTE INTERVALS.  EXPLICIT ALGORITHM IS USED.
 C -----------------------------------------------------------------------
-C   DECLARE VARIABLES
+C VARIABLES:
+C       DEADS = DEAD STORAGE VOLUME
+C       S0 = INITIAL DEAD STORAGE VOLUME
+C       V0 = INITIAL BASIN VOLUME(ABOVE PL OF OUTLET)
+C       STORE = DEAD STORAGE VOLUME VARIABLE
+C       VOLUME = EFFECTIVE STORAGE VARIABLE
+C       NBASIN = NUMBER OF BASIN DATA POINTS(ZERO AT D=0.)
+C       BD.BQ.BV = BASIN DEPTHS,QS,AND VOLUMES
+C       NA = STREAM NUMBER FROM MEMORY
+C       TIME1 = LOWER BOUND ON MODEL OUTPUT
+C       TIME2 = UPPER BOUND ON MODEL OUTPUT
 C -----------------------------------------------------------------------
-      IMPLICIT DOUBLE PRECISION (a-h, o-z)
-!      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3) !(8.29.18)
-      DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
-      COMMON/BLK1/SS
       DIMENSION A(600)
       DIMENSION BD(20),BQ(20),BV(20),AA(20),BB(20)
-C ------------------------------------------------------------------------
-      V0=0.D0
-      S0=0.D0
-      SS=SS1 ! SS (8.29.18) - should I activite this (8.30.2018)
+!      COMMON/BLK1/SS(600,10)
+! C ------------------------------------------------------------------------       
+! C-  INITIALIZE VARIABLES
+! C ------------------------------------------------------------------------
+      ! REAL(8),DIMENSION(m,n) :: SS1
+      ! INTEGER,VALUE :: m
+      ! INTEGER,VALUE :: n
+      ! !INTEGER,VALUE :: mn
+      ! INTEGER,VALUE :: mn1
+      ! REAL(8),DIMENSION(mn2,mn3) :: Hydro
+      ! INTEGER,VALUE :: mn2
+      ! INTEGER,VALUE :: mn3
+! C ------------------------------------------------------------------------
+      V0=0.
+      S0=0.
+!      SS=SS1 ! SS
       READ(NDAT,*)NA,DEADS,S0,V0,NBASIN,TIME1,TIME2
       READ(NDAT,*)(BD(I),BQ(I),BV(I),I=1,NBASIN)
       WRITE(NUT,901)NA,DEADS,S0,V0
-C ------------------------------------------------------------------------	  
       !J1=1
       !DO 201 I=1,NBASIN (old code miguel)
-      !J1=J1+3
-C -----------------------------------------------------------------------
-C   CONVERSION
-C -----------------------------------------------------------------------       
+      !    J1=J1+3
+C ----------------Conversions------ (9.25.17)
 C!      J1=1
 C!      DO 201 I=1,NBASIN ! (marco)
 C!      BD(I)=BD(I)/(0.3048) !To obtain feet
@@ -72,8 +68,9 @@ C!      READ(NDAT,*)(BD(I),BQ(I),BV(I),I=1,NBASIN)
       WRITE(NUT,905)(I,BD(I),BQ(I),BV(I),I=1,NBASIN)
 905   FORMAT(10X,I7,2X,F10.2,F10.2,F10.3)
 C ----------------------------------------------------------------------
-C   GRAPHICS
+C       GRAPHICS
 C ----------------------------------------------------------------------
+!Now We are not going to WRITE the Flood.ans---------------------------- 
       WRITE(NUT,921)NA,NA
 921   FORMAT(///,20X,'  INFLOW',/,20X,'(STREAM',I2,')',/,3(25X,'|',/)
      C  25X,'V',15x,'Effective depth',/,
@@ -88,29 +85,31 @@ C ----------------------------------------------------------------------
      C  20X,  '      V           ---------',/,
      C  22X,  'OUTFLOW',/,21X,'(STREAM',I2,')',//)
 
-908    FORMAT(11X,'BASIN ROUTING MODEL RESULTS(5-MINUTE INTERVALS):'
-     C  ,//,11X,'TIME     DEAD-STORAGE INFLOW   EFFECTIVE  OUTFLOW ',
-     C        'EFFECTIVE'
-     C  ,/,11X,'(HRS)     FILLED(AF)  (CFS)    DEPTH(FT)  (CFS)  ',
-     C' VOLUME(AF)')
-C READ IN STREAM NUMBER NA
+908    FORMAT(11X,'BASIN ROUTING MODEL RESULTS(5-MIMUTE INTERVALS):'
+     C  ,//,11X,' TIME   DEAD-STORAGE  INFLOW   EFFECTIVE  OUTFLOW ',
+     C      'EFFECTIVE'
+     C  ,/,11X,' (HRS)    FILLED (AF)   (CFS)   DEPTH (FT)  (CFS)   ',
+     C'VOLUME(AF)')
+C-READ IN STREAM NUMBER NA
        CALL MREAD(NA,A)
-C INITIALIZE VARIABLES
+C-INITIALIZE VARIABLES
        I=1        
        QBASIN=BQ(NBASIN)
        NB=NBASIN-1
        VBASIN=BV(NBASIN)
-       TIME=0.D0
-       STORE=0.D0
-       VOLUME=0.D0
+       TIME=0.
+       STORE=0.
+       VOLUME=0.
        NUMBER=A(600)
-       ZERO=0.D0
-C      WRITE(NUT,403)
+       ZERO=0.
+c      WRITE(NUT,403)
+!Now We are not going to WRITE the Flood.ans---------------------------- 
        WRITE(NUT,908)
+C-----------------------------------------------------------------------
 C      WRITE(NUT,480)
-C ----------------------------------------------------------------------
-C   MODEL DEAD STORAGE
-C ----------------------------------------------------------------------
+C-----------------------------------------------------------------------
+C MODEL DEAD STORAGE
+C-----------------------------------------------------------------------
        IF(DEADS.EQ.0.)GO TO 100
        IF(S0.GE.DEADS)GO TO 100
        STORE=S0
@@ -120,46 +119,44 @@ C ----------------------------------------------------------------------
        X=STORE-DEADS
        IF(X)10,10,155
 10     IF(TIME.LT.TIME1.OR.TIME.GT.TIME2)GO TO 220
-C ------------------------------------------------------------------------
+!Now We are not going to WRITE the Flood.ans---------------------------- 
        WRITE(NUT,907)TIME,STORE,A(I),ZERO,ZERO,ZERO
 907    FORMAT(10X,F7.3,F13.3,F9.1,F10.2,F9.1,F11.3)
-220    A(I)=0.D0
-C ALL FLOW HELD IN BASIN
+220    A(I)=0.
+C-ALL FLOW HELD IN BASIN
        GO TO 2000
-C DEAD STORAGE REMAINING
+C-DEAD STORAGE REMAINING
 155    ATEMP=A(I)
        A(I)=X*145.2
        ATEMP=ATEMP-A(I)
        STORE=DEADS
        TIME=TIME-.08333
 !       IF(TIME.GE.TIME1.AND.TIME.LE.TIME2) CONTINUE
-C ------------------------------------------------------------------------ 
+!Now We are not going to WRITE the Flood.ans---------------------------- 
        IF(TIME.GE.TIME1.AND.TIME.LE.TIME2) WRITE(NUT,930)ATEMP,A(I)
-930    FORMAT(/,11X,'DEAD STORAGE FILLED WITH UNIT INFLOW(CFS) = ',F15.1
-     C  ,/,11X,'REMAINING UNIT FLOW IS = ',F34.1,' CFS ',/)
-C ROUT THRU BASIN
+930    FORMAT(/,11X,'DEAD STORAGE FILLED WITH UNIT INFLOW(CFS) = ',F10.1
+     C  ,/,11X,'REMAINING UNIT FLOW IS = ',F29.1,' CFS ',/)
+C-ROUT THRU BASIN
        GO TO 110
-C FLOW THRU BASIN MODE.-
+C-FLOW THRU BASIN MODE.-
 100    VOLUME=V0
 110    CONTINUE
-C FIND INITIAL BASIN DEPTH AND OUTFLOW
+C-FIND INITIAL BASIN DEPTH AND OUTFLOW
        DO 115 II=1,NB
        IF(VOLUME.LT.BV(II+1))GO TO 116
 115    CONTINUE
 c rmc 114     TI=TIME+.083333
 114    TI=TIME+.083333
-C ------------------------------------------------------------------------ 
+!Now We are not going to WRITE the Flood.ans---------------------------- 
        WRITE(NUT,909)TI
 909    FORMAT(10X,F7.3,5X,
      C '*BASIN CAPACITY EXCEEDED; BASIN DATA IS EXTRAPOLATED*')
        II=NB
 116    TEMP=(VOLUME-BV(II))/(BV(II+1)-BV(II))
        D0=BD(II)+TEMP*(BD(II+1)-BD(II))
-C ------------------------------------------------------------------------ 
-C GET INITIAL VALUES
-C ------------------------------------------------------------------------ 
-       O2=0.D0
-       S2=0.D0
+C.....GET INITIAL VALUES
+       O2=0.
+       S2=0.
        S1=BV(II)+TEMP*(BV(II+1)-BV(II))
        O1=BQ(II)+TEMP*(BQ(II+1)-BQ(II))
        CON=60./43560.*5./2.
@@ -183,14 +180,15 @@ C ------------------------------------------------------------------------
        OAVG=(O1+O2)/2.
        O1=O2
        IF(TIME.LT.TIME1.OR.TIME.GT.TIME2)GO TO 1000
-C ------------------------------------------------------------------------
+!Now We are not going to WRITE the Flood.ans---------------------------- 
        WRITE(NUT,907)TIME,DEADS,A(K),DEPTH2,OAVG,S2
 1000   A(K)=OAVG
        A(600)=576
 2000   CONTINUE
        CALL MWRITE(NA,A)
+       RETURN
 C ------------------------------------------------------------------------
-C HYDROGRAPH TO EXPORT
+C-Hydrograph to export
 C ------------------------------------------------------------------------
 !       A(600)=0
 !       Hydro(:,2)=A
@@ -207,5 +205,4 @@ C ------------------------------------------------------------------------
 !       A(600)=0
 !       Hydro(:,2)=A
 !       SS1=SS
-       RETURN
        END SUBROUTINE fthru

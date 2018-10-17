@@ -2,14 +2,11 @@ C    PROGRAM 13 - Based on Hromadka book pag 164
 C  ----------------------------------------------------------------------
 !      SUBROUTINE   SUBSB(TIMLAG,PERCNT,KODE1,NUMBER,NUT)
       SUBROUTINE   SUBSB(TIMLAG,PERCNT,KODE1,NUMBER)
-C -----------------------------------------------------------------------
+C  ----------------------------------------------------------------------
 C   THIS SUBROUTINE DETERMINES THE PERCENTAGES OF DISCHARGE
 C   FACTORS FOR THE VARIOUS ZONE CLASSIFICATIONS.
 C   RFAT MNT
-C -----------------------------------------------------------------------
-C   DECLARE VARIABLES
-C -----------------------------------------------------------------------
-	IMPLICIT DOUBLE PRECISION (a-h, o-z)
+C  ----------------------------------------------------------------------
       DIMENSION PERCNT(150),VAL(31,2),FOOT(31,2),MNT(33,2),SCS(33,2)
       DIMENSION DESERT(33,2)
       DATA VAL/0.,15.0,25.,35.0,50.,65.0,75.,100.,115.,125.,
@@ -56,9 +53,9 @@ c      KODE1=6:  SCS
 c      TIMLAG=LAG
 c      TIME=INCREMEMTS OF LAG
 c      NUMBER=INDEX OF PERCNT VECTOR
-C ----------------------------------------------------------------------
-      ANEW=0.D0
-      AOLD=0.D0
+
+      ANEW=0.
+      AOLD=0.
       K=1
       NUMBER=1
       TIME=TIMLAG
@@ -69,10 +66,9 @@ C
       GO TO(100,200,300,350,355,355),KODE1
 C
 100   CONTINUE
-C -----------------------------------------------------------------------
-C   INTEGRATE "S" GRAPH IN ORDER TO DETERMINE UH(I)
-C -----------------------------------------------------------------------
-
+C
+C       INTEGRATE "S" GRAPH IN ORDER TO DETERMINE UH(I)
+C
       TEMP=0.5*(VAL(K,2)+VAL(N,2))*
      C(VAL(K,1)-VAL(N,1))
       ANEW=ANEW+TEMP
@@ -145,7 +141,7 @@ C  ----------------------------------------------------------------------
       GO TO 10
 1000  CONTINUE
       NUMBER=NUMBER-1
-C ------------------------------------------------------------------------  
+!Now We are not going to WRITE the Floof.ans----------------------------  
       IF(NUMBER.GE.150) WRITE(NUT,1001)NUMBER
 1001  FORMAT(8X,'UNIT - HYDROGRAPH TERMINATED AFTER',I4,' INTERVALS')
 C  ----------------------------------------------------------------------

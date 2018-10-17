@@ -11,13 +11,13 @@ C                  Gainesville, FL 32611        Raleigh, NC 27695-7625(USA)
 C                  e-mail: carpena@ufl.edu      
 C---------------------------------------------------------------
 C---------------------------------------------------------------
-c OUTPUT FOR VFSMOD INPUT FILES
+c	Output for VFSMOD input files
 C---------------------------------------------------------------
 	IMPLICIT DOUBLE PRECISION (a-h,o-z)
 	COMMON/hydgph/u(5000,2),qh(5000,3)
 	COMMON/rain/rfix,rti(5000),rfi(5000),rcum(5000,2),ref(5000,2),ncum
 C---------------------------------------------------------------
-C OUTPUT OF VFSMOD INPUT FILE: *.isd
+C Output of VFSMOD input file: *.isd
 C---------------------------------------------------------------
 	npart=7
 	coarse=1.0d0
@@ -46,7 +46,7 @@ c----- problem. Issue warning.
       WRITE(10,160)
       WRITE(10,*)'WARNING: small runoff in this case produces large',
      C    ' sediment concentration with the sediment yield method #', 
-     C    ieroty,'selected. Using Williams method instead--see manual'  
+     2    ieroty,'selected. Using Williams method instead--see manual'  
       WRITE(10,160)
       END IF
 	por=0.434d0
@@ -56,7 +56,7 @@ c----- problem. Issue warning.
 	WRITE (15,102)dpp,sg
 
 C---------------------------------------------------------------
-c OUTPUT of VFSMOD runoff hydrograph: *.iro
+c Output of VFSMOD runoff hydrograph: *.iro
 C---------------------------------------------------------------
 	swidth=A*10000.d0/pL
 	slength=pL
@@ -97,8 +97,9 @@ c---WRITE 0 entry after last step
       tEND1=qh(nhyd,1)*3600.d0
       WRITE(12,106)tEND1,qh(nhyd,2)      
       WRITE(12,107)tEND1+300.d0,0.d0
+
 C---------------------------------------------------------------
-c OUTPUT VFSMOD rainfall hyetograph: *.irn
+c Output VFSMOD rainfall hyetograph: *.irn
 C---------------------------------------------------------------
       nstep2=100
       IF(nhyet.le.nstep2)THEN
@@ -122,7 +123,7 @@ C---------------------------------------------------------------
       DO 32 k=1,nstep2
       IF(ii.eq.k*nWRITE2) THEN
       WRITE(14,204) tt,rfi(ii)
-C     WRITE(*,'(2i4,2e12.5)')ii,k,tt,rfi(ii)
+c     WRITE(*,'(2i4,2e12.5)')ii,k,tt,rfi(ii)
       END IF
 32    CONTINUE
       END IF
@@ -132,14 +133,16 @@ c---WRITE 0 entry after last step
       tEND2=rti(nhyet)*3600.d0
       WRITE(14,204)tEND2,rfi(nhyet)      
       WRITE(14,205)tEND2+300.d0,0.d0
+
 C---------------------------------------------------------------
-C  OUTPUT MESSAGE AT END OF PROGRAM 
+C              Output message at END of program 
 C---------------------------------------------------------------
 	WRITE(*,*)
 	WRITE(*,*)'...FINISHED...','UH v3.0.1 2/2012'
 	WRITE(*,*)
+
 C---------------------------------------------------------------
-c  FORMAT STATEMENTS
+c  Format Statements
 C---------------------------------------------------------------
 101	FORMAT (2x,i4,2x,f8.1,2x,f11.4,2x,f7.4,8x,
      C   'Npart, Coarse, Ci(g/cm3), Por')
