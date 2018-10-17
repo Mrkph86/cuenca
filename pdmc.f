@@ -1,10 +1,10 @@
-C --------------------------------------------------------------------
-C               Disaggregation Daily Precipitation
-C --------------------------------------------------------------------
-	Subroutine pdmc(SS2,m1,n1,NDAT,m2) ! ARGU =(NUT,NDAT) (2.1.18)
+C --------------------------------------------------------------------------------
+C   Program: Disaggregation Daily Precipitation
+C --------------------------------------------------------------------------------
+	Subroutine pdmc(SS2,m1,n1,m2) ! ARGU =(NUT,NDAT) (2.1.18)
 !	Subroutine hyetgh(jstype,P,D,volro,qdepth,vol,qp,A,xIa,rtpeak,er,
 !     C          er1,erCoolm,ti,nref,tc,a1,b1,bigE,raimax30,nhyet)
-C --------------------------------------------------------------------
+C --------------------------------------------------------------------------------
 C ! Where P'(t)= is the cumulative hyetograph for the given duration
 C !       Pd is the total rainfall for the given period (mm)
 C !       D is the storm duration in hours
@@ -52,37 +52,38 @@ C ! where where tmid=12. Alternatively (Munoz-Carpena and Parsons,2004),
 C ! tmid=12.00 for storm type II & III, tmid=9.995 for storm type I, and
 C ! tmid=7.960 for storm type IA
 C !
-C --------------------------------------------------------------------
+C --------------------------------------------------------------------------------
 C  Storm type I and IA - fitted equations from tabular DATA on Haan's
-C --------------------------------------------------------------------
+C --------------------------------------------------------------------------------
 C   INPUTS
-C --------------------------------------------------------------------
-!   jstype=Storm Type(1,5)
-!   P=Daily Precipitation (mm)
-!   D=is the storm duration in hours
-!   volro= runoff volumen (mm)
-!   qdepth=Discharge peak (mm/h)
-!   vol= runoff Volumen (m3)
-!   A=Area (ha)
-!   xIa=Initial Abstraccion (mm)
+C --------------------------------------------------------------------------------
+!   jstype = Storm Type(1,5)
+!   P      = Daily Precipitation (mm)
+!   D      = the storm duration in hours
+!   volro  = runoff volumen (mm)
+!   qdepth = Discharge peak (mm/h)
+!   vol    = runoff Volumen (m3)
+!   A      = Area (ha)
+!   xIa    = Initial Abstraccion (mm)
 !   rtpeak
-!   tc Time concentration (day)
-!   Def =Recorded time interval (hrs)
-C -----------------------------------------------------------------------
+!   tc     = Time concentration (day)
+!   Def    = Recorded time interval (hrs)
+C --------------------------------------------------------------------------------
 C   DECLARE VARIABLES
-C -----------------------------------------------------------------------
+C --------------------------------------------------------------------------------
 	IMPLICIT DOUBLE PRECISION (a-h, o-z)
       CHARACTER*4 stype(5)
       DIMENSION rti(5000),rfi(5000),rcum(5000,2),ref(5000,2)
       DIMENSION rainh(5000),rainh30(5000)
       DATA stype/'I','IA','II','III','user'/
 	DIMENSION SS2(600,10)
+C --------------------------------------------------------------------------------
 !	Return SS(:,1)=Time (h)
 !     SS(:,2)=Precipitation (mm)
 !     SS(END,1)=N.pulses
-C -----------------------------------------------------------------------			
+C --------------------------------------------------------------------------------			
       READ(NDAT,*)jstype,P,D,Def ! (2.1.18) I think needs more variables (look up)
-C -----------------------------------------------------------------------	
+C --------------------------------------------------------------------------------	
 !	PRINT *,jstype,P,D,volro,qdepth,vol,qp,A,xIa,rtpeak,er,
 !     1          er1,erCoolm,ti,nref,tc,a1,b1,bigE,raimax30,nhyet
 !	PRINT *,xIa
@@ -97,7 +98,7 @@ C ---rmc 24/3/99 - hyetograph using unit hydrograph time step, Def
       dtime=Def
       ndtime=D/dtime+1
 	  !PRINT *,dtime,ndtime
-C ----------------------------------------------------------------------- 
+C -------------------------------------------------------------------------------- 
       pcumtot=0.d0
       refcum=0.d0
       IFlag=0
@@ -143,9 +144,9 @@ C -- rain time step loop ---
         rti(i)=(i-1)*dtime
         tsmall=tmid+rti(i)-d*.5d0
         ptp=SCStorm(jstype,tsmall)
-C -----------------------------------------------------------------------
+C --------------------------------------------------------------------------------
 c  Calculate cumulative hyetograph for any duration and volume
-C -----------------------------------------------------------------------
+C --------------------------------------------------------------------------------
         cumtotal=pd*(ptp-pm)/(pp-pm)      
 !        WRITE(*,'(6f9.4)')rti(i),ptp,cumtotal,
 !     1        SCStorm(jstype,rti(i)),SCStorm(3,rti(i)) 
@@ -156,9 +157,9 @@ c        WRITE(*,'(6f9.4)')rti(i),pd,ptp,pm
            ti=(rti(i)-rti(i-1))/(cumtotal-pcumtot)*
      C            (xIa-pcumtot)+rti(i-1) 
         END IF
-C ---------------------------------------------------------------
+C --------------------------------------------------------------------------------
 c  Calculate instantaneous hyetograph and rainfall energy term for USLE
-C ---------------------------------------------------------------
+C --------------------------------------------------------------------------------
         rainh(i)=cumtotal-pcumtot
 		raterain=rainh(i)/Def
           SS2(i,1)=rti(i)
@@ -168,7 +169,9 @@ C ---------------------------------------------------------------
 		!WRITE(*,'(6f9.4)')rti(i),ptp,cumtotal,rainh(i),raintasa
 		!WRITE(*,'(6f9.4)')rti(i),cumtotal,raterain !Time(hr) PAcum (mm) RatePreci(m/hr)
         IF (rainh(i).gt.0.d0) THEN
-c ---> english units ft-tons/acre-inch
+C --------------------------------------------------------------------------------
+c english units ft-tons/acre-inch
+C --------------------------------------------------------------------------------
            IF ((rainh(i)/25.4d0/dtime).gt.3.d0) THEN
              smalle=1074.d0
            ELSE
@@ -179,7 +182,9 @@ c           smalle=
 c     1      1099.d0 * (1.d0-0.72*exp(-1.27*(rainh(i)/25.4d0/dtime)))               
 c           PRINT*,rti(i),smalle
            bigE=bigE+smalle
-c ---> metric units
+C --------------------------------------------------------------------------------
+C  metric units
+C --------------------------------------------------------------------------------
 c           bigE=bigE+11.9d0+8.73d0*dlog10(rainh(i)/dtime)
         END IF
         IF (rainh(i).gt.raimax) THEN
@@ -219,11 +224,12 @@ C ---rmc 03/11/99---
       rI30=rfix30/25.4
 
 C ---rmc 08/24/11-- DOne hyet - computing musle param
-C -----------------------------------------------------------------------
-c  compute R for musle
+C --------------------------------------------------------------------------------
+C  Compute R for musle
+C --------------------------------------------------------------------------------
 c    er=> Foster et al. 1977b, units N/h 
 c    er1=> Williams, units Mg h/ha N
-C -----------------------------------------------------------------------
+C --------------------------------------------------------------------------------
 c**convert bigE to SI metric - multiply by 1.702 / 100
 c** units Rst=N/h
       bigEm=0.006700d0*bigE
@@ -237,9 +243,9 @@ c**                    1/0.67 * R for J/m^2
         erCooly=a1*(P/25.4)**(2.119*rti(ndtime)**0.0086)
      C           /(rti(ndtime)**b1)
         erCoolm=erCooly*1.702d0
-C -----------------------------------------------------------------------
+C ---------------------------------------------------------------------------------
 C   Results
-C -----------------------------------------------------------------------     
+C ---------------------------------------------------------------------------------     
       !WRITE(10,5)Def*60.d0,nhyet
 5     FORMAT(/,1x,'SCS ',f4.1,'-MIN HYETOGRAPH (25 of',i5,
      C  1x,'steps PRINTed)',/,/,  
@@ -265,7 +271,6 @@ C --PRINT hyetograph results 25 time steps only
 !      END IF
 !7     END DO
 !8     END DO
-     
       
       !WRITE(10,10)k,rti(ndtime),crainh,crainh30,cref
 10    FORMAT(2x,i3,2x,f8.3,3x,3f10.3)

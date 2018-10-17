@@ -1,20 +1,21 @@
-	  
-C --------------------------------------------------------------
+C ------------------------------------------------------------------------
+C  PROGRAM MUSLE 
+C ------------------------------------------------------------------------
       SUBROUTINE musle(er,er1,erCoolm,ek,Y,pl,cfact,pfact,Area,vol,tc,
      C rain,D,soilty,dp,sconc,sconc1,sconc2,om,aa1,b1,bigE,raimax30,qp)
-C --------------------------------------------------------------
+C ------------------------------------------------------------------------
 C      version 3.0.1, Last ModIFied: See ModIFications below
 C      WRITTEN FOR: ASAE'99 Toronto paper, March 8, 2002 
 C      Written by: R. Munoz-Carpena (rmc)   &   J. E. Parsons, BAE (jep)
 C                  University of Florida        BAE, NC State University
 C                  Gainesville, FL 32611        Raleigh, NC 27695-7625(USA)
 C                  e-mail: carpena@ufl.edu      
-C --------------------------------------------------------------
+C ------------------------------------------------------------------------
 	  IMPLICIT DOUBLE PRECISION (a-h, o-z)
 	  CHARACTER*20 soilty
 	  CHARACTER*20 types(21)
 	  DIMENSION d50(21),sand(21),silt(21),Tf(21),Sf(21),Pf(21)
-
+C ------------------------------------------------------------------------
 	  DATA types/'Clay','Silty clay','Sandy clay','Silty clay loam',
      C  'Clay loam','Sandy clay loam','Silt','Silt loam','Loam',
      C  'Very fine sandy loam','Fine sandy loam','Sandy loam',
@@ -51,15 +52,15 @@ C --------------------------------------------------------------
      C        0.d0,0.d0,0.d0,-0.025d0,-0.025d0,
      C        -0.025d0,-0.025d0,-0.05d0,-0.05d0,-0.05d0,
      C        -0.05d0/
-
-C --------------------
-c  Compute R for musle
-C --------------------
+C ------------------------------------------------------------------------
+C  Compute R for musle
+C ------------------------------------------------------------------------
 c     er=> Foster et al. 1977b, units 
 c     er1=> Williams, units Mg h/ha N
-C --------------------
+C ------------------------------------------------------------------------
 c**convert bigE to SI metric - multiply by 1.702 / 100
 c** units Rst=N/h, Runoff volume: vol(m3), volro (mm)
+C ------------------------------------------------------------------------
       volro=vol/(Area*10000.d0/1000.d0)
       qpdepth=qp*360.d0/Area
       Def=0.24d0*tc
@@ -71,10 +72,10 @@ c** units Rst=N/h, Runoff volume: vol(m3), volro (mm)
       er=0.5d0* rst + 0.35d0*rro
       er1 = 9.05d0*(vol*qp)**0.56d0/Area
 C rmc03/28/99-- er1 = 9.05d0*(vol*qp)**0.56d0
-C --------------------
+C ------------------------------------------------------------------------
 c**   Cooley (1980) -> er for design storms, EI/100 = R ft tonsf/ac 
 c**                    1/0.67 * R for J/m^2
-C --------------------
+C ------------------------------------------------------------------------
       erCooly=aa1*(rain/25.4d0)**(2.119d0*D**0.0086d0)/(D**b1)
       erCoolm=erCooly*1.702d0
       WRITE(10,17)
@@ -96,9 +97,9 @@ c     C  ,'RAINFALL ENERGY FACTOR R FOR EROSION CALCULATIONS')
      C   /,4x,'a1=', f10.4, ' b1=',f10.4,
      C   /,4x,'Rain=', f10.3, ' mm   D=',f10.3,' hr',
      C   /,4x,'Rst =',f10.3,' ft-tonf/acre =',f10.3,' N/ha')
-C ------------------
+C ------------------------------------------------------------------------
 c  erGLEAMS, from GLEAMS daily rain 
-C ---------------------
+C ---------------------------------------------------------------------------
       gei=7.87d0*(rain/25.4d0)**1.51d0
 	  geim=1.702d0*gei
 	  WRITE(10,32) rain,gei,geim

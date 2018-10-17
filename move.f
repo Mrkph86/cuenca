@@ -1,7 +1,6 @@
 C     PROGRAM 18  ! Based on Hromadka book pag 222
 C -----------------------------------------------------------------------
-!      SUBROUTINE MOVE(NUT,NDAT)
-      SUBROUTINE MOVE(SS1,m,n,NUT,NDAT,Hydro,mn1,mn2) ! ARGU = NDAT (9.25.17)
+      SUBROUTINE MOVE(m,n,mn1,mn2) ! ARGU = NDAT (9.25.17)
 C -----------------------------------------------------------------------
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C THIS SUBROUTINE MOVES STREAM NA FORWARD IN TIME BY DELT HOURS         C
@@ -15,12 +14,12 @@ C -----------------------------------------------------------------------
 C  DECLARE VARIABLES
 C -----------------------------------------------------------------------
       IMPLICIT DOUBLE PRECISION (a-h, o-z)
-!      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3) !(8.29.18)
-      DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
-      COMMON/BLK1/SS
+      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3) !(8.29.18)
+      COMMON/NUT/NUT
+      COMMON/NDAT/NDAT
       COMMON/BLK10/B(600)
       DIMENSION A(600)
-!     EXPORT Hydrograph, Date (hours) StreamA(CFS)
+!     EXPORT Hydrograph, date (hours) StreamA(CFS)
 C ------------------------------------------------------------------------
 C  INITIALIZE VARIABLES
 C ------------------------------------------------------------------------	  
@@ -38,12 +37,12 @@ C ------------------------------------------------------------------------
 903   FORMAT(10X,' MODEL        STREAM',I2,3X,' STREAM',I2,/,
      C  10X,' TIME          (CFS)      MOVED',F7.3,' HOURS')
       DO 20 I=1,600
-20    B(I)=0.D0
+20    B(I)=0.
       NUMBER=A(600)
       XM=DELT*12.
       M=XM
       TIME=0.D0 
-C (M=NUMBER OF INTERVALS MOVED FORWARD)
+C M=NUMBER OF INTERVALS MOVED FORWARD
       NUM1=NUMBER+M
       IF(NUM1.LT.576)GO TO 50
 C HYDROGRAPH EXCEEDS 576; REDUCE NUMBER
@@ -52,7 +51,7 @@ C HYDROGRAPH EXCEEDS 576; REDUCE NUMBER
 C MOVE HYDROGRAPH FORWARD
 50    XA=M
       XA=XM-XA
-      XB=1.-XA
+      XB=1.D0-XA
       DO 100 I=1,NUMBER
       J=I+M+1
       JJ=I+M
@@ -64,7 +63,9 @@ C ------------------------------------------------------------------------
       WRITE(NUT,921)TIME,A(I),B(I)
 921   FORMAT(10X,F7.3,3X,F10.1,F10.1)
 100   CONTINUE
+C ------------------------------------------------------------------------ 
 C WRITE RESULTS TO MEMORY
+C ------------------------------------------------------------------------ 
       B(600)=J
       CALL MWRITE(NA,B)
 C ------------------------------------------------------------------------

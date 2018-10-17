@@ -1,4 +1,5 @@
-	
+C --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+C   Program:	
 C---------------------------------------------------------------
       SUBROUTINE vfsout(dp,ieroty,sconc,sconc1,sconc2,Area,pL,qp,tp,
      C                  tc,D,ti,nhyet,nhyd)
@@ -11,7 +12,7 @@ C                  Gainesville, FL 32611        Raleigh, NC 27695-7625(USA)
 C                  e-mail: carpena@ufl.edu      
 C---------------------------------------------------------------
 C---------------------------------------------------------------
-c OUTPUT FOR VFSMOD INPUT FILES
+C OUTPUT FOR VFSMOD INPUT FILES
 C---------------------------------------------------------------
 	IMPLICIT DOUBLE PRECISION (a-h,o-z)
 	COMMON/hydgph/u(5000,2),qh(5000,3)
@@ -54,9 +55,8 @@ c----- problem. Issue warning.
 	dpp=dp/10000.d0
 	sg=2.65d0
 	WRITE (15,102)dpp,sg
-
 C---------------------------------------------------------------
-c OUTPUT of VFSMOD runoff hydrograph: *.iro
+C OUTPUT of VFSMOD runoff hydrograph: *.iro
 C---------------------------------------------------------------
 	swidth=Area*10000.d0/pL
 	slength=pL
@@ -98,7 +98,7 @@ c---WRITE 0 entry after last step
       WRITE(12,106)tEND1,qh(nhyd,2)      
       WRITE(12,107)tEND1+300.d0,0.d0
 C---------------------------------------------------------------
-c OUTPUT VFSMOD rainfall hyetograph: *.irn
+C OUTPUT VFSMOD rainfall hyetograph: *.irn
 C---------------------------------------------------------------
       nstep2=100
       IF(nhyet.le.nstep2)THEN

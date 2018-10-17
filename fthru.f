@@ -1,52 +1,51 @@
-C PROGRAM 16 ! Based on Hromadka book pag 210
-C ------------------------------------------------------------
-      SUBROUTINE fthru(SS1,m,n,NUT,NDAT,Hydro,mn1,mn2,mn3) ! 
-!     SUBROUTINE fthru(NUT,NDAT) ! From the book (8.29.18)
-C ------------------------------------------------------------	  
+C PROGRAM 16  -  Based on Hromadka book pag 210
+C --------------------------------------------------------------------------------------
+      SUBROUTINE fthru(m,n,mn1,mn2,mn3) 
+C --------------------------------------------------------------------------------------	  
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C THIS SUBROUTINE ROUTS FLOW THROUGH A FLOW THRU BASIN                               C 
 C USING FIVE-MINUTE INTERVALS.  EXPLICIT ALGORITHM IS USED.                          C 
 C VARIABLES:                                                                         C 
 C ***** Line 1: NA,DEADS,S0,V0,NBASIN,TIME1,TIME2 *****                              C 	
-C NA:    	Stream "A" number. This stream is the one to be modeled                  C		
+C NA:    	Stream "A" number. This stream is the one to be modeled                    C		
 C DEADS:  Dead storage volume (m^3)                                                  C
-C S0:    	Initial dead storage volume (m^3)                                        C
-C V0:    	Initial basin volume (above PL of outlet) (m^3)                          C			
+C S0:    	Initial dead storage volume (m^3)                                          C
+C V0:    	Initial basin volume (above PL of outlet) (m^3)                            C			
 C NBASIN:    Number of basin data points (zero at D=0).                              C
 C            Allowable values [4 – 20]                                               C		
-C TIME1:    	Time for Beginning of results (hrs)                                C					
-C TIME2:	    Time for End of results (hrs)                                        C					
+C TIME1:    	Time for Beginning of results (hrs)                                    C					
+C TIME2:	    Time for End of results (hrs)                                          C					
 C ***** Line 2: BD(I),BQ(I),BV(I),I=1,NBASIN *****                                   C							
-C BD(I):    	Basin Depth (m). Allowable values [0-76]                           C			
-C BQ(I):    	Basin outflow (m^3/s). Allowable values [0-2831]                   C					
-C BV(I):    	Basin Volume (m^2-m=m^3). Allowable values [0-123348184 m^3]       C						
-C I=1    									                         C
-C NBASIN:	Number of basin data points (zero at D=0).                               C
+C BD(I):    	Basin Depth (m). Allowable values [0-76]                               C			
+C BQ(I):    	Basin outflow (m^3/s). Allowable values [0-2831]                       C					
+C BV(I):    	Basin Volume (m^2-m=m^3). Allowable values [0-123348184 m^3]           C						
+C I=1    									                                           C
+C NBASIN:	Number of basin data points (zero at D=0).                                 C
 C            Allowable values [4 – 20]	                                           C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
-C -----------------------------------------------------------------------
+C --------------------------------------------------------------------------------------
 C   DECLARE VARIABLES
-C -----------------------------------------------------------------------
+C --------------------------------------------------------------------------------------
       IMPLICIT DOUBLE PRECISION (a-h, o-z)
-!      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3) !(8.29.18)
-      DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
-      COMMON/BLK1/SS
+      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3) !(8.29.18)
+      COMMON/NUT/NUT
+      COMMON/NDAT/NDAT
       DIMENSION A(600)
       DIMENSION BD(20),BQ(20),BV(20),AA(20),BB(20)
-C ------------------------------------------------------------------------
-      V0=0.D0
-      S0=0.D0
+C --------------------------------------------------------------------------------------
+      V0=0.
+      S0=0.
       SS=SS1 ! SS (8.29.18) - should I activite this (8.30.2018)
       READ(NDAT,*)NA,DEADS,S0,V0,NBASIN,TIME1,TIME2
       READ(NDAT,*)(BD(I),BQ(I),BV(I),I=1,NBASIN)
       WRITE(NUT,901)NA,DEADS,S0,V0
-C ------------------------------------------------------------------------	  
+C --------------------------------------------------------------------------------------	  
       !J1=1
       !DO 201 I=1,NBASIN (old code miguel)
       !J1=J1+3
-C -----------------------------------------------------------------------
+C --------------------------------------------------------------------------------------
 C   CONVERSION
-C -----------------------------------------------------------------------       
+C --------------------------------------------------------------------------------------       
 C!      J1=1
 C!      DO 201 I=1,NBASIN ! (marco)
 C!      BD(I)=BD(I)/(0.3048) !To obtain feet
@@ -71,9 +70,9 @@ C!      READ(NDAT,*)(BD(I),BQ(I),BV(I),I=1,NBASIN)
      C  ,/,11X,'  NUMBER      (FT)      (CFS)     (AF)')
       WRITE(NUT,905)(I,BD(I),BQ(I),BV(I),I=1,NBASIN)
 905   FORMAT(10X,I7,2X,F10.2,F10.2,F10.3)
-C ----------------------------------------------------------------------
+C --------------------------------------------------------------------------------------
 C   GRAPHICS
-C ----------------------------------------------------------------------
+C --------------------------------------------------------------------------------------
       WRITE(NUT,921)NA,NA
 921   FORMAT(///,20X,'  INFLOW',/,20X,'(STREAM',I2,')',/,3(25X,'|',/)
      C  25X,'V',15x,'Effective depth',/,
@@ -100,17 +99,17 @@ C INITIALIZE VARIABLES
        QBASIN=BQ(NBASIN)
        NB=NBASIN-1
        VBASIN=BV(NBASIN)
-       TIME=0.D0
-       STORE=0.D0
-       VOLUME=0.D0
+       TIME=0.
+       STORE=0.
+       VOLUME=0.
        NUMBER=A(600)
-       ZERO=0.D0
+       ZERO=0.
 C      WRITE(NUT,403)
        WRITE(NUT,908)
 C      WRITE(NUT,480)
-C ----------------------------------------------------------------------
+C --------------------------------------------------------------------------------------
 C   MODEL DEAD STORAGE
-C ----------------------------------------------------------------------
+C --------------------------------------------------------------------------------------
        IF(DEADS.EQ.0.)GO TO 100
        IF(S0.GE.DEADS)GO TO 100
        STORE=S0
@@ -120,10 +119,10 @@ C ----------------------------------------------------------------------
        X=STORE-DEADS
        IF(X)10,10,155
 10     IF(TIME.LT.TIME1.OR.TIME.GT.TIME2)GO TO 220
-C ------------------------------------------------------------------------
+C --------------------------------------------------------------------------------------
        WRITE(NUT,907)TIME,STORE,A(I),ZERO,ZERO,ZERO
 907    FORMAT(10X,F7.3,F13.3,F9.1,F10.2,F9.1,F11.3)
-220    A(I)=0.D0
+220    A(I)=0.
 C ALL FLOW HELD IN BASIN
        GO TO 2000
 C DEAD STORAGE REMAINING
@@ -133,7 +132,7 @@ C DEAD STORAGE REMAINING
        STORE=DEADS
        TIME=TIME-.08333
 !       IF(TIME.GE.TIME1.AND.TIME.LE.TIME2) CONTINUE
-C ------------------------------------------------------------------------ 
+C -------------------------------------------------------------------------------------- 
        IF(TIME.GE.TIME1.AND.TIME.LE.TIME2) WRITE(NUT,930)ATEMP,A(I)
 930    FORMAT(/,11X,'DEAD STORAGE FILLED WITH UNIT INFLOW(CFS) = ',F15.1
      C  ,/,11X,'REMAINING UNIT FLOW IS = ',F34.1,' CFS ',/)
@@ -148,18 +147,18 @@ C FIND INITIAL BASIN DEPTH AND OUTFLOW
 115    CONTINUE
 c rmc 114     TI=TIME+.083333
 114    TI=TIME+.083333
-C ------------------------------------------------------------------------ 
+C -------------------------------------------------------------------------------------- 
        WRITE(NUT,909)TI
 909    FORMAT(10X,F7.3,5X,
      C '*BASIN CAPACITY EXCEEDED; BASIN DATA IS EXTRAPOLATED*')
        II=NB
 116    TEMP=(VOLUME-BV(II))/(BV(II+1)-BV(II))
        D0=BD(II)+TEMP*(BD(II+1)-BD(II))
-C ------------------------------------------------------------------------ 
+C -------------------------------------------------------------------------------------- 
 C GET INITIAL VALUES
-C ------------------------------------------------------------------------ 
-       O2=0.D0
-       S2=0.D0
+C -------------------------------------------------------------------------------------- 
+       O2=0.
+       S2=0.
        S1=BV(II)+TEMP*(BV(II+1)-BV(II))
        O1=BQ(II)+TEMP*(BQ(II+1)-BQ(II))
        CON=60./43560.*5./2.
@@ -183,15 +182,15 @@ C ------------------------------------------------------------------------
        OAVG=(O1+O2)/2.
        O1=O2
        IF(TIME.LT.TIME1.OR.TIME.GT.TIME2)GO TO 1000
-C ------------------------------------------------------------------------
+C --------------------------------------------------------------------------------------
        WRITE(NUT,907)TIME,DEADS,A(K),DEPTH2,OAVG,S2
 1000   A(K)=OAVG
        A(600)=576
 2000   CONTINUE
        CALL MWRITE(NA,A)
-C ------------------------------------------------------------------------
+C --------------------------------------------------------------------------------------
 C HYDROGRAPH TO EXPORT
-C ------------------------------------------------------------------------
+C --------------------------------------------------------------------------------------
 !       A(600)=0
 !       Hydro(:,2)=A
 !	  Hydro(:,2)=A*(0.3048**3) !To convert in m^3/s

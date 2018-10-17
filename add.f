@@ -1,8 +1,7 @@
 C     PROGRAM 18  ! Based on Hromadka book pag 222
-C -----------------------------------------------------------------------
-!     SUBROUTINE ADD(NUT,NDAT)
-      SUBROUTINE ADD(SS1,m,n,NUT,NDAT,Hydro,mn1,mn2) ! ARGU = NDAT (9.25.17)
-C -----------------------------------------------------------------------
+C -------------------------------------------------------------------------
+      SUBROUTINE ADD(m,n,mn1,mn2) ! ARGU = NDAT (9.25.17)
+C -------------------------------------------------------------------------
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C THIS SUBROUTINE ADDS A STREAM DATA BANK TO ANOTHER STREAM DATA BANK     C
 C VARIABLES:                                                              C
@@ -11,20 +10,14 @@ C NUMS:  Stream to receive flow from another stream                       C
 CCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCCC
 C -------------------------------------------------------------------------
 C   DECLARE VARIABLES
-C -------------------------------------------------------------------------
+C --------------------------------------------------------------------------
       IMPLICIT DOUBLE PRECISION (a-h, o-z)
-!      REAL(8) SS,SS1,Hydro
-!      REAL(8),COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
-!      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
-      DIMENSION SS(600,10),SS1(600,10),Hydro(600,3)
-      !DIMENSION SS1(600,10)
-      !DIMENSION Hydro(600,3)
-      COMMON/BLK1/SS
-!     COMMON/BLK1/SS,SS1,Hydro 
-      DIMENSION A(600)
-      DIMENSION B(600)
+      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
+      COMMON/NUT/NUT
+      COMMON/NDAT/NDAT
+      DIMENSION A(600),B(600)
 !     EXPORT Hydrograph, Date (hours) StreamA(CFS)
-C -------------------------------------------------------------------------
+C ----------------------------------------------------------------------------
       SS=SS1
       READ(NDAT,*)NUMA,NUMS
       CALL MREAD(NUMS,A)
@@ -37,15 +30,15 @@ C -------------------------------------------------------------------------
 100   A(I)=A(I)+B(I)
       A(600)=NUMBER
       CALL MWRITE(NUMS,A)
-C ------------------------------------------------------------------------
+C -------------------------------------------------------------------------------
 C OUTPUT
-C ------------------------------------------------------------------------
+C -------------------------------------------------------------------------------
       WRITE(NUT,101)NUMA,NUMS
 101   FORMAT(10X,'STREAM NUMBER',I2,' ADDED TO STREAM NUMBER',I2)
       RETURN
-C ------------------------------------------------------------------------
+C -------------------------------------------------------------------------------
 C HYDROGRAPH TO EXPORT
-C ------------------------------------------------------------------------
+C -------------------------------------------------------------------------------
 !      Hydro(:,2)=A*(0.3048**3)!To obtain in m^3/S
 !      Hydro(600,2)=0
 !      DO 716 I=1,NUMBER

@@ -1,10 +1,10 @@
 !--------------------------------------------------------------------
 C  Disaggregation Daily Precipitation
 !--------------------------------------------------------------------
-C ----------------------------------------------------------------------------
+C ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       SUBROUTINE hyetgh(jstype,P,D,volro,qdepth,vol,qp,Area,xIa,rtpeak,
      C          er,er1,erCoolm,ti,nref,tc,a1,b1,bigE,raimax30,nhyet)
-C --------------------------------------------------------------
+C --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 c      version 3.0.1, Last ModIFied: See ModIFications below
 C      WRITTEN FOR: ASAE'99 Toronto paper, March 8, 2002 
 C      Written by: R. Munoz-Carpena (rmc)   &   J. E. Parsons, BAE (jep)
@@ -27,7 +27,7 @@ c !
 c !  where T=t -12  (with t in hours)
 c !        P24 is the 24h storm
 c ! 
-c ! storm type I  - fitted from SCS tabular DATA - rmc 03/04/99
+c ! storm type I  - fitted from SCS tabular data - rmc 03/04/99
 c !
 c ! hyetograph for 24 hour storms
 c !
@@ -40,7 +40,7 @@ c !       |   0.5129                           ;for [-3.0163|T|+0.013]>0
 c !  
 c !  where T=t -9.995  (with t in hours)
 c !  
-c ! storm type IA  - fitted from SCS tabular DATA - rmc 03/04/99
+c ! storm type IA  - fitted from SCS tabular data - rmc 03/04/99
 c !
 c ! hyetograph for 24 hour storms
 c !
@@ -61,7 +61,7 @@ c ! tmid=12.00 for storm type II & III, tmid=9.995 for storm type I, and
 c ! tmid=7.960 for storm type IA
 c !
 c !----------------------------------------------------------------
-c  Storm type I and IA - fitted equations from tabular DATA on Haan's
+c  Storm type I and IA - fitted equations from tabular data on Haan's
 c !----------------------------------------------------------------
 
       IMPLICIT DOUBLE PRECISION (a-h, o-z)
@@ -127,9 +127,9 @@ C -- rain time step loop ---
       rti(i)=(i-1)*dtime
       tsmall=tmid+rti(i)-d*.5d0
       ptp=SCStorm(jstype,tsmall)
-C --------------------
+C --------------------------------------------------------------------------------------------------------------------------------------
 c  Calculate cumulative hyetograph for any duration and volume
-C --------------------
+C --------------------------------------------------------------------------------------------------------------------------------------
       cumtotal=pd*(ptp-pm)/(pp-pm)      
 c     WRITE(*,'(6f9.4)')rti(i),ptp,cumtotal,
 c    C        SCStorm(jstype,rti(i)),SCStorm(3,rti(i)) 
@@ -140,9 +140,9 @@ c     WRITE(*,'(6f9.4)')rti(i),pd,ptp,pm
       ti=(rti(i)-rti(i-1))/(cumtotal-pcumtot)*
      C   (xIa-pcumtot)+rti(i-1) 
       END IF
-C ---------------------------------------------------------------
+C ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 c  Calculate instantaneous hyetograph and rainfall energy term for USLE
-C ---------------------------------------------------------------
+C ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
       rainh(i)=cumtotal-pcumtot
 	  raterain=rainh(i)/Def
 	!MAC 04/10/12
@@ -198,11 +198,11 @@ C ---rmc 03/11/99---
       rI30=rfix30/25.4
 
 C ---rmc 08/24/11-- DOne hyet - computing musle param
-C --------------------
+C --------------------------------------------------------------------------------------------------------------------------------------
 c  compute R for musle
 c    er=> Foster et al. 1977b, units N/h 
 c    er1=> Williams, units Mg h/ha N
-C --------------------
+C --------------------------------------------------------------------------------------------------------------------------------------
 c**convert bigE to SI metric - multiply by 1.702 / 100
 c** units Rst=N/h
       bigEm=0.006700d0*bigE
@@ -216,9 +216,9 @@ c**                    1/0.67 * R for J/m^2
       erCooly=a1*(P/25.4)**(2.119*rti(ndtime)**0.0086)
      C           /(rti(ndtime)**b1)
       erCoolm=erCooly*1.702d0
-C --------------------
+C --------------------------------------------------------------------------------------------------------------------------------------
 c results
-C --------------------
+C --------------------------------------------------------------------------------------------------------------------------------------
       
       !WRITE(10,5)Def*60.d0,nhyet !MAC 04/10/12
 5     FORMAT(/,1x,'SCS ',f4.1,'-MIN HYETOGRAPH (25 of',i5,

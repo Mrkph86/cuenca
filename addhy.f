@@ -8,8 +8,8 @@ C     TRANSFORMS SUBROUTINE UNITH FOR USE WITH THE FLOOD SYSTEM
 C     JUST INSERT CALL TO ADDHY AT END OF SUBROUTINE UNITH
 C     IMMEDIATELY PRECEEDING CALL TO OABS
 C     ADD RUNOFF HYDROGRAPH TO A STREAM
-C -----------------------------------------------------------------------
-C MEMORY ALLOCATION
+C -----------------------------------------------------------------------   
+C   DECLARE VARIABLES
 C -----------------------------------------------------------------------
       IMPLICIT DOUBLE PRECISION (a-h, o-z)
       DIMENSION H(440)
