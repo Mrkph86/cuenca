@@ -25,7 +25,7 @@ C   DECLARE VARIABLES
 C --------------------------------------------------------------------------------- 
       IMPLICIT DOUBLE PRECISION (a-h,o-z)       
       COMMON/BLK10/B(600)
-      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
+      !COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
       COMMON/NUT/NUT
       COMMON/NDAT/NDAT
       DIMENSION A(600)
@@ -33,7 +33,7 @@ C ------------------------------------------------------------------------------
 C -----------------------------------------------------------------------------------
 C INITIALIZE VARIABLES
 C ----------------------------------------------------------------------------------
-      TIME=0.D0
+      TIME=0.d0
       SS=SS1
 C ----------------------------------------------------------------------------------
 C INPUT DATA
@@ -69,10 +69,10 @@ C ------------------------------------------------------------------------------
      C  17X,'CHANNEL LENGTH(FT) = ',F12.2,/,
      C  17X,'MANNINGS FACTOR= ',F16.3,/)
       DO 10 I=1,600
-10    B(I)=0. !!adding D0 to 0. 8.30.2018
+10    B(I)=0.d0 
       CALL MREAD(NA,A)
-      ISUM=0 ! should be a period and D0 as well
-      QSUM=0.
+      ISUM=0.d0 ! should be a period and D0 as well
+      QSUM=0.d0
       NUMBER=A(600)
 C ----------------------------------------------------------------------------------
 C FIND QMAX OF STREAM
@@ -107,12 +107,12 @@ C ------------------------------------------------------------------------------
      C 11X,' TIME     (STREAM',I2,')   (STREAM',I2,')',/,
      C 11X,' (HRS)       (CFS)        (CFS)')
 100   IF(V0.GT.0.)V=V0
-      TT=XL/3600./V
+      TT=XL/3600.d0/V
       DELT=TT*C
-      EX=(.08333+.5*DELT)/ (1.5*DELT)
-      CSTAR=1.-(1.-C)**EX
+      EX=(.08333d0+.5*DELT)/ (1.5*DELT)
+      CSTAR=1.d0-(1.-C)**EX
       CIN=CSTAR
-      COUT=1.-CSTAR
+      COUT=1.d0-CSTAR
       X=DELT*12.
       NUM=X
       IF((NUMBER+NUM+1).LE.576)GO TO 180
@@ -120,7 +120,7 @@ C ------------------------------------------------------------------------------
 180   CONTINUE
       Y=NUM
       DA=X-Y
-      DB=1.-DA
+      DB=1.d0-DA
 C ----------------------------------------------------------------------------------
       WRITE(NUT,911)CSTAR
 911   FORMAT(10X,' MODIFIED CHANNEL ROUTING COEFFICIENT FOR 5-MINUTE ',/
@@ -139,7 +139,7 @@ C ------------------------------------------------------------------------------
       B(II)=B(II)+DA*QOUT
       II=II-1
       B(II)=B(II)+DB*QOUT
-      TIME=TIME+.083333
+      TIME=TIME+.083333d0
       IF(TIME.LT.TIME1.OR.TIME.GT.TIME2)GO TO 200
 C ----------------------------------------------------------------------------------
       WRITE(NUT,913)TIME,A(I),B(I)
@@ -160,11 +160,11 @@ C ------------------------------------------------------------------------------
 !      DO 716 I=1,B(600)
 !      DO 716 I=1,mn1
 !      IF(I==1) THEN 
-!      Hydro(I,1)=0.083333
+!      Hydro(I,1)=0.083333d0
 !      Hydro(I,2)=A(I)
 !      ELSE
 !      J=I-1
-!      Hydro(I,1)=Hydro(J,1)+0.083333
+!      Hydro(I,1)=Hydro(J,1)+0.083333d0
 !      Hydro(I,2)=A(I)
 !      END IF
 !      WRITE(*,*) Hydro(I,1), Hydro(I,2), Hydro(I,3)

@@ -58,8 +58,8 @@ c      TIMLAG=LAG
 c      TIME=INCREMEMTS OF LAG
 c      NUMBER=INDEX OF PERCNT VECTOR
 C -------------------------------------------------------------------------
-      ANEW=0.
-      AOLD=0.
+      ANEW=0.d0
+      AOLD=0.d0
       K=1
       NUMBER=1
       TIME=TIMLAG

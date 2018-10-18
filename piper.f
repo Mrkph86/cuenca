@@ -18,7 +18,7 @@ C ---------------------------------------------------------------------------
 C   DECLARE VARIABLES
 C ---------------------------------------------------------------------------
       IMPLICIT DOUBLE PRECISION(a-h,o-z) !(8.28.18)
-      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
+      !COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3)
       COMMON/NUT/NUT
       COMMON/NDAT/NDAT
       COMMON/BLK10/B(600)
@@ -66,8 +66,8 @@ C ------------------------------------------------------------------------------
       QCAP=35.628/XN*.013*S*D**2.6667
       NUMBER=A(600)
       VCAP=QCAP/.7 85 4/D/D
-      XA=XL/300.
-      XB=300./43560.
+      XA=XL/300.d0
+      XB=300.d0/43560.d0
       WRITE(NUT,905)
 905   FORMAT(/,13X,'NORMAL DEPTH VELOCITY PIPE ROUTING RESULTS:',//,
      C 10X,'  TIME     INFLOW   VELOCITY   OUTFLOW    UPSTREAM',/,
@@ -92,13 +92,13 @@ C ------------------------------------------------------------------------------
       STORE=STORE+(Q-QCAP)*XB
       Q=QCAP
       IF(STORE.GE.0.)GO TO 520
-      Q=QCAP+STORE*145.2
-      STORE=0.
+      Q=QCAP+STORE*145.2d0
+      STORE=0.d0
 C ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 C OPEN FLOW
 C ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 510   QQ=Q/QCAP
-      INDEX=QQ*20.+1.
+      INDEX=QQ*20.d0+1.d0
       V=(QQ-F(INDEX,1))/.05*(F(INDEX+1,2)-F(INDEX,2))+F(INDEX,2)
       V=V*VCAP
 520   XNUM=XA/V !IF(V.GT.0.)XNUM=XA/V - old code 
@@ -106,13 +106,13 @@ C ------------------------------------------------------------------------------
       NUM=XNUM
       ZNUM=NUM
       DA=XNUM-ZNUM
-      DB=1.-DA
+      DB=1.d0-DA
       II=I+NUM+1
       IF(II.GT.576)GO TO 522
       B(II)=B(II)+DA*Q
       II=I+NUM
       B(II)=B(II)+DB*Q
-522   TIME=TIME+.083333
+522   TIME=TIME+.083333d0
       IF(TIME.LT.TIME1.OR.TIME.GT.TIME2)GO TO 550
       WRITE(NUT,921)TIME,A(I),V,B(I),STORE  ! STORE???
 921   FORMAT(10X,F7.3,3F10.1,F13.3)
@@ -141,11 +141,11 @@ C ------------------------------------------------------------------------------
 !      DO 716 I=1,A(600)-1
 !      DO 716 I=1,mn1
 !      IF(I==1) THEN 
-!      Hydro(I,1)=0.083333
+!      Hydro(I,1)=0.083333d0
 !      Hydro(I,2)=A(I)
 !      ELSE
 !      J=I-1
-!      Hydro(I,1)=Hydro(J,1)+0.083333
+!      Hydro(I,1)=Hydro(J,1)+0.083333d0
 !      Hydro(I,2)=A(I)
 !      END IF
 !      WRITE(*,*) Hydro(I,1), Hydro(I,2), Hydro(I,3)

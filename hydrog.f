@@ -24,9 +24,9 @@ C   CONVERSION
 C ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- 
       DISANG=DIS/(0.3048**3) !Convertion to CFS !  (9.25.17)
       
-      NNUMBER=0.0
+      NNUMBER=0.0d0
       DO 50 I=1,600-1
-      TIME=TIME+0.08333
+      TIME=TIME+0.08333d0
       Hydro(I,1)=TIME
       IF (TIME.GT.FTIME.AND.TIME.LE.ETIME) THEN
       SS1(I,NA)=SS1(I,NA)+DISANG

@@ -14,7 +14,7 @@ C -----------------------------------------------------------------------
 C  DECLARE VARIABLES
 C -----------------------------------------------------------------------
       IMPLICIT DOUBLE PRECISION (a-h, o-z)
-      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3) !(8.29.18)
+!      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3) !(8.29.18)
       COMMON/NUT/NUT
       COMMON/NDAT/NDAT
       COMMON/BLK10/B(600)
@@ -37,11 +37,11 @@ C ------------------------------------------------------------------------
 903   FORMAT(10X,' MODEL        STREAM',I2,3X,' STREAM',I2,/,
      C  10X,' TIME          (CFS)      MOVED',F7.3,' HOURS')
       DO 20 I=1,600
-20    B(I)=0.
+20    B(I)=0.d0
       NUMBER=A(600)
-      XM=DELT*12.
+      XM=DELT*12.d0
       M=XM
-      TIME=0.D0 
+      TIME=0.d0 
 C M=NUMBER OF INTERVALS MOVED FORWARD
       NUM1=NUMBER+M
       IF(NUM1.LT.576)GO TO 50
@@ -51,13 +51,13 @@ C HYDROGRAPH EXCEEDS 576; REDUCE NUMBER
 C MOVE HYDROGRAPH FORWARD
 50    XA=M
       XA=XM-XA
-      XB=1.D0-XA
+      XB=1.d0-XA
       DO 100 I=1,NUMBER
       J=I+M+1
       JJ=I+M
       B(J)=A(I)*XA
       B(JJ)=A(I)*XB+B(JJ)
-      TIME=TIME+.083333
+      TIME=TIME+.083333d0
       IF(TIME.LT.TIME1.OR.TIME.GT.TIME2)GO TO 100
 C ------------------------------------------------------------------------ 
       WRITE(NUT,921)TIME,A(I),B(I)

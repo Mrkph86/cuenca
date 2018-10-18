@@ -1,5 +1,5 @@
       
-!  Part of Program 15 - Based on Hromadka book pag 197
+!  Part of FLOOD Program 15 (old main from the book) - Based on Hromadka book pag 197
 C  ----------------------------------------------------------------------
       SUBROUTINE ADDHY(UNIT,INTERV,NA,H)
 C  ----------------------------------------------------------------------

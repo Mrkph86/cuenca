@@ -33,9 +33,9 @@ C ------------------------------------------------------------------------------
       DIMENSION A(600)
       DIMENSION BD(20),BQ(20),BV(20),AA(20),BB(20)
 C --------------------------------------------------------------------------------------
-      V0=0.
-      S0=0.
-      SS=SS1 ! SS (8.29.18) - should I activite this (8.30.2018)
+      V0=0.d0
+      S0=0.d0
+!      SS=SS1 ! SS (8.29.18) - should I activite this (8.30.2018)
       READ(NDAT,*)NA,DEADS,S0,V0,NBASIN,TIME1,TIME2
       READ(NDAT,*)(BD(I),BQ(I),BV(I),I=1,NBASIN)
       WRITE(NUT,901)NA,DEADS,S0,V0
@@ -99,38 +99,38 @@ C INITIALIZE VARIABLES
        QBASIN=BQ(NBASIN)
        NB=NBASIN-1
        VBASIN=BV(NBASIN)
-       TIME=0.
-       STORE=0.
-       VOLUME=0.
+       TIME=0.d0
+       STORE=0.d0
+       VOLUME=0.d0
        NUMBER=A(600)
-       ZERO=0.
+       ZERO=0.d0
 C      WRITE(NUT,403)
        WRITE(NUT,908)
 C      WRITE(NUT,480)
 C --------------------------------------------------------------------------------------
 C   MODEL DEAD STORAGE
 C --------------------------------------------------------------------------------------
-       IF(DEADS.EQ.0.)GO TO 100
+       IF(DEADS.EQ.0.d0)GO TO 100
        IF(S0.GE.DEADS)GO TO 100
        STORE=S0
        DO 220 I=1,NUMBER
-       STORE=STORE+A(I)/145.2
-       TIME=TIME+.083333
+       STORE=STORE+A(I)/145.2d0
+       TIME=TIME+.083333d0
        X=STORE-DEADS
        IF(X)10,10,155
 10     IF(TIME.LT.TIME1.OR.TIME.GT.TIME2)GO TO 220
 C --------------------------------------------------------------------------------------
        WRITE(NUT,907)TIME,STORE,A(I),ZERO,ZERO,ZERO
 907    FORMAT(10X,F7.3,F13.3,F9.1,F10.2,F9.1,F11.3)
-220    A(I)=0.
+220    A(I)=0.d0
 C ALL FLOW HELD IN BASIN
        GO TO 2000
 C DEAD STORAGE REMAINING
 155    ATEMP=A(I)
-       A(I)=X*145.2
+       A(I)=X*145.2d0
        ATEMP=ATEMP-A(I)
        STORE=DEADS
-       TIME=TIME-.08333
+       TIME=TIME-.08333d0
 !       IF(TIME.GE.TIME1.AND.TIME.LE.TIME2) CONTINUE
 C -------------------------------------------------------------------------------------- 
        IF(TIME.GE.TIME1.AND.TIME.LE.TIME2) WRITE(NUT,930)ATEMP,A(I)
@@ -146,7 +146,7 @@ C FIND INITIAL BASIN DEPTH AND OUTFLOW
        IF(VOLUME.LT.BV(II+1))GO TO 116
 115    CONTINUE
 c rmc 114     TI=TIME+.083333
-114    TI=TIME+.083333
+114    TI=TIME+.083333d0
 C -------------------------------------------------------------------------------------- 
        WRITE(NUT,909)TI
 909    FORMAT(10X,F7.3,5X,
@@ -157,17 +157,17 @@ C ------------------------------------------------------------------------------
 C -------------------------------------------------------------------------------------- 
 C GET INITIAL VALUES
 C -------------------------------------------------------------------------------------- 
-       O2=0.
-       S2=0.
+       O2=0.d0
+       S2=0.d0
        S1=BV(II)+TEMP*(BV(II+1)-BV(II))
        O1=BQ(II)+TEMP*(BQ(II+1)-BQ(II))
-       CON=60./43560.*5./2.
+       CON=60./43560.*5./2.d0
        DO 1011 K=1,NBASIN
        AA(K)=BV(K)-BQ(K)*CON
 1011   BB(K)=BV(K)+BQ(K)*CON
        AA(1)=BB(1)
-       CON=CON*2.
-       ATEMP=S1-O1*CON/2.
+       CON=CON*2.d0
+       ATEMP=S1-O1*CON/2.d0
        DO 1000 K=I,576
        QQ=CON*A(K)
        TEMP=QQ+ATEMP
@@ -177,9 +177,9 @@ C ------------------------------------------------------------------------------
        DEPTH2=BD(I1)+RATIO*(BD(I2)-BD(I1))
        S2=BV(I1)+RATIO*(BV(I2)-BV(I1))
        O2=BQ(I1)+RATIO*(BQ(I2)-BQ(I1))
-       ATEMP=S2-O2*CON/2.
-       TIME=TIME+.0833333
-       OAVG=(O1+O2)/2.
+       ATEMP=S2-O2*CON/2.d0
+       TIME=TIME+.0833333d0
+       OAVG=(O1+O2)/2.d0
        O1=O2
        IF(TIME.LT.TIME1.OR.TIME.GT.TIME2)GO TO 1000
 C --------------------------------------------------------------------------------------

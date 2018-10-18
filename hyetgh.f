@@ -115,7 +115,7 @@ c      IF (jstype.eq.3) jstype=4
       tmid=rcum(1,1)
       END IF
 C --  scaling factors for other storm durations and volumen
-      tminus=tmid-d*.50
+      tminus=tmid-d*.50d0
       tplus=tmid+d*.5d0
       pm=SCStorm(jstype,tminus)
       pp=SCStorm(jstype,tplus)
@@ -152,7 +152,7 @@ c ---> english units ft-tons/acre-inch
       IF ((rainh(i)/25.4d0/dtime).gt.3.d0) THEN
       smalle=1074.d0
       ELSE
-      smalle=(rainh(i)/25.4)*
+      smalle=(rainh(i)/25.4d0)*
      C (916.d0+331.d0*dlog10(rainh(i)/25.4d0/dtime))
       END IF
 c           smalle=
@@ -195,7 +195,7 @@ C --rmc-08/24/11-- number of hyetograph steps
 C ---rmc 03/11/99---
       rfix=raimax/(dtime*3600.d0)/1000.d0
       rfix30=raimax30*2.d0
-      rI30=rfix30/25.4
+      rI30=rfix30/25.4d0
 
 C ---rmc 08/24/11-- DOne hyet - computing musle param
 C --------------------------------------------------------------------------------------------------------------------------------------
@@ -206,14 +206,14 @@ C ------------------------------------------------------------------------------
 c**convert bigE to SI metric - multiply by 1.702 / 100
 c** units Rst=N/h
       bigEm=0.006700d0*bigE
-      rst=1.702d0*(bigE/100.d0)*(raimax30/25.4/dtime)*dtime/0.5d0
+      rst=1.702d0*(bigE/100.d0)*(raimax30/25.4d0/dtime)*dtime/0.5d0
       rro=volro*(qdeph)**(1.d0/3.d0)
       er=0.5d0* rst + 0.35d0*rro
 C rmc 03/28/99- er1 = 9.05d0*(vol*qp)**0.56d0
       er1 = 9.05d0*(vol*qp)**0.56d0/Area
 c**   Cooley (1980) -> er for design storms, EI/100 = R ft tonsf/ac 
 c**                    1/0.67 * R for J/m^2
-      erCooly=a1*(P/25.4)**(2.119*rti(ndtime)**0.0086)
+      erCooly=a1*(P/25.4d0)**(2.119d0*rti(ndtime)**0.0086d0)
      C           /(rti(ndtime)**b1)
       erCoolm=erCooly*1.702d0
 C --------------------------------------------------------------------------------------------------------------------------------------

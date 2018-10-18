@@ -24,20 +24,20 @@ c rmc 100   CONTINUE
 101   FORMAT(1X,76('*'))
 102   FORMAT(1X,76('-'))
 130   FORMAT(1X,76('='))   
-      STEP=5.*60./43560. 
+      STEP=5.d0*60.d0/43560.d0 
       WRITE(NUT,103)
 103   FORMAT(/,19X, 'HYDROGRAPH IN FIVE-MINUTE INTERVALS (CFS)',/)
       WRITE(NUT,130)
-      F=40./XMAX
-      FMASS=40./SUM
-      T0=0.0
-      T1=XMAX/4.
-      T2=2.*T1
-      T3=3.*T1
+      F=40.d0/XMAX
+      FMASS=40.d0/SUM
+      T0=0.0d0
+      T1=XMAX/4.d0
+      T2=2.d0*T1
+      T3=3.d0*T1
       WRITE(NUT,105)T0,T1,T2,T3,XMAX
 105   FORMAT(3X,'TIME(HRS)  VOLUME(AF)  Q(CFS)  ',F3.0,1X,4F10.1)
       WRITE(NUT,130)
-      XMASS=0.
+      XMASS=0.d0
 C ------------------------------------------------------------------------------------------
       GO TO(141,142,143,146,147,148),KTYPE 
 141   KNUM=1
@@ -72,7 +72,7 @@ c	print*,'J,JMASS=',J,JMASS
       IF(KNUM.EQ.1) GO TO 400
 c rmc 320   DO 350 K=1, KNUM
       DO 350 K=1, KNUM
-      TIME=TIME+.083333 
+      TIME=TIME+.083333d0 
       IF(K.EQ.1) GO TO 349
       XMASS=XMASS+H(I)*STEP
       JMASS=XMASS*FMASS+1
@@ -83,7 +83,7 @@ c rmc 320   DO 350 K=1, KNUM
 350   LINE(JMASS)=BLANK
       GO TO 215
 400   CONTINUE
-      TIME=TIME+.083333
+      TIME=TIME+.083333d0
       IF(TIME.GE.TIME1.AND.TIME.LE.TIME2) WRITE(NUT,210)TIME,XMASS,
      C H(I),LINE
 210   FORMAT(3X,F7.3,F12.4,1X,F9.2,2X,41A1) 

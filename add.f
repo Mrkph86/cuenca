@@ -44,11 +44,11 @@ C ------------------------------------------------------------------------------
 !      DO 716 I=1,NUMBER
 !      DO 716 I=1,mn1
 !      IF(I==1) THEN 
-!      Hydro(I,1)=0.083333
+!      Hydro(I,1)=0.083333d0
 !      Hydro(I,2)=A(I)
 !      ELSE
 !      J=I-1
-!      Hydro(I,1)=Hydro(J,1)+0.083333
+!      Hydro(I,1)=Hydro(J,1)+0.083333d0
 !      Hydro(I,2)=A(I)
 !      END IF
 !      WRITE(*,*) Hydro(I,1), Hydro(I,2), Hydro(I,3)
