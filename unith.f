@@ -97,7 +97,7 @@ c rmc FX=1.
       FX3=.78d0
       FX6=.831d0
       FX24=.91d0
-      IF(AREA.GE.350.)GO TO 180
+      IF(AREA.GE.350.d0)GO TO 180
       DO 100 I=1,13
       IF(AREA.LE.DYR(I))GO TO 110
 100   CONTINUE
@@ -223,8 +223,8 @@ C ------------------------------------------------------------------------------
       IF(KLAG.EQ.3)PLAG=PM
       IF(KLAG.EQ.4)PLAG=PD
       IF(KLAG.EQ.0)GO TO 98
-!      CALL SUBSB(TIMLAG,PERCNT,KODE1,NUMBER)
-      CALL SUBSB(TIMLAG,PERCNT,KLAG,NUMBER)  ! problem 10.1.2018
+      CALL SUBSB(TIMLAG,PERCNT,KODE1,NUMBER)
+!      CALL SUBSB(TIMLAG,PERCNT,KLAG,NUMBER)  ! problem 10.1.2018
 	PRINT*,'PERCNT=',PERCNT
       IF(NUMBER.GT.NLAG)NLAG=NUMBER
       DO 99 I=1,150
@@ -464,7 +464,6 @@ C Print results and estimate mass balances
 C ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 c      print*,"H=",H
       CALL OASB(NUT,KTYPE,H,INTERV,XMAX,UNIT,SUM,TIME1,TIME2)
-!        CALL ADDHY(UNIT,INTERV,NA,H)
 C ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
 C HYDROGRAPH TO EXPORT
 C ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
