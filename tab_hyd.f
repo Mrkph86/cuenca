@@ -24,7 +24,7 @@ C ------------------------------------------------------------------------------
       DIMENSION qhstep(600,3)
 C -----------------------------------------------------------------------------------
       !WRITE(2,205)mref,nref !MAC 04/10/12
-      cqdepth5=0.
+      cqdepth5=0.d0
       DO 40 i=1,mref
 c     WRITE(2,'(2f10.4)')(u(i,j),j=1,2)
       cqdepth5=u(i,2)*360.d0/Area+cqdepth5
@@ -48,8 +48,8 @@ C ---Apply convolution of the u and ref values to obtained hydrograph
            
       qp=dmax1(qh(k,2),qp)
 70    CONTINUE
-      qdepth=qp*360./Area
-      qh(1,3)=0.
+      qdepth=qp*360.d0/Area
+      qh(1,3)=0.d0
       DO 61 i=2,k-1
       qh(i,3)=qh(i-1,3)+qh(i,2)*3600*Def !MAC 04/10/12 Accumulated (m^3)
 61    CONTINUE
@@ -90,9 +90,8 @@ C ------------------------------------------------------------------------------
 	IF (qhstep(i-1,1)<qh(nhyd,1).and.qhstep(i,1)>=qh(nhyd,1)) THEN
 	qhstep(i,3)=qh(nhyd,3)
 	qhstep(i,2)=(qhstep(i,3)-qhstep(i-1,3))/Dstep
-	END IF
+      END IF
 	!WRITE(*,*)(qhstep(i,jj),jj=1,3)
-		
 	!Save in SS qh !MAC 04/10/12
 !	DO 62 j=1,i
       !SS storages hydrograph in CFS 

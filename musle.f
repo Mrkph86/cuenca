@@ -65,7 +65,7 @@ C ------------------------------------------------------------------------
       qpdepth=qp*360.d0/Area
       Def=0.24d0*tc
       dtime=Def
-      ndtime=D/dtime+1.d0
+      ndtime=INT(D/dtime+1.d0)
       bigEm=0.006700d0*bigE
       rst=1.702d0*(bigE/100.d0)*(raimax30/25.4d0/dtime)*dtime/0.5d0
       rro=volro*(qpdepth)**(1.d0/3.d0)

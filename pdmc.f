@@ -96,7 +96,7 @@ C ---rmc 24/3/99 - hyetograph using unit hydrograph time step, Def
       !Def=0.24d0*tc
 !	  Def=0.083333d03 !5min
       dtime=Def
-      ndtime=D/dtime+1
+      ndtime=INT(D/dtime+1)  !int
 	  !PRINT *,dtime,ndtime
 C -------------------------------------------------------------------------------- 
       pcumtot=0.d0
@@ -106,7 +106,7 @@ C ------------------------------------------------------------------------------
       bigE=0.d0
       raimax=0.d0
       raimax30=0.d0
-      nref=0.d0
+      nref=0
 
 C ---v3 09/2011 rmc
 C -- calculate scaling factors for D<24 h, based on eq. 3-7, Haan et.al. (1994)

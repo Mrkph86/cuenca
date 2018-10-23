@@ -73,7 +73,7 @@ C
 C -------------------------------------------------------------------------
 C   INTEGRATE "S" GRAPH IN ORDER TO DETERMINE UH(I)
 C -------------------------------------------------------------------------
-      TEMP=0.5*(VAL(K,2)+VAL(N,2))*
+      TEMP=0.5d0*(VAL(K,2)+VAL(N,2))*
      C(VAL(K,1)-VAL(N,1))
       ANEW=ANEW+TEMP
       IF(TIME.GT.VAL(K,1))GO TO 10
@@ -83,7 +83,7 @@ C -------------------------------------------------------------------------
       B=VAL(K,1)-VAL(N,1)
       GO TO 400
 200   CONTINUE
-      TEMP=0.5*(FOOT(K,2)+FOOT(N,2))*
+      TEMP=0.5d0*(FOOT(K,2)+FOOT(N,2))*
      C(FOOT(K,1)-FOOT(N,1))
       ANEW=ANEW+TEMP
       IF(TIME.GT.FOOT(K,1))GO TO 10
@@ -94,7 +94,7 @@ C
       B=FOOT(K,1)-FOOT(N,1)
       GO TO 400
 300   CONTINUE
-      TEMP=0.5*(VMNT(K,2)+VMNT(N,2))*
+      TEMP=0.5d0*(VMNT(K,2)+VMNT(N,2))*
      C(VMNT(K,1)-VMNT(N,1))
       ANEW=ANEW+TEMP
       IF(TIME.GT.VMNT(K,1))GO TO 10
@@ -104,7 +104,7 @@ C
       B=VMNT(K,1)-VMNT(N,1)
       GO TO 400
 350   CONTINUE
-      TEMP=0.5*(DESERT(K,2)+DESERT(N,2))*
+      TEMP=0.5d0*(DESERT(K,2)+DESERT(N,2))*
      C(DESERT(K,1)-DESERT(N,1))
       ANEW=ANEW+TEMP
       IF(TIME.GT.DESERT(K,1))GO TO 10
@@ -116,7 +116,7 @@ C
 C  ----------------------------------------------------------------------
 C  SCS METHOD
 C  ----------------------------------------------------------------------
-355   TEMP=0.5*(SCS(K,2)+SCS(N,2))*(SCS(K,1)-SCS(N,1))
+355   TEMP=0.5d0*(SCS(K,2)+SCS(N,2))*(SCS(K,1)-SCS(N,1))
       ANEW=ANEW+TEMP
 C
       IF(TIME.GT.SCS(K,1))GO TO 10
@@ -131,17 +131,17 @@ C
 C  ----------------------------------------------------------------------
 C   ADJUST INTEGRATION FOR INTERPOLATION
 C  ----------------------------------------------------------------------
-      DELA=0.5*(Y+XX)*(1.-DEL/(Y-X))*B
+      DELA=0.5d0*(Y+XX)*(1.d0-DEL/(Y-X))*B
       ANEW=ANEW-DELA
       PERCNT(NUMBER)=(ANEW-AOLD)/TIMLAG
       NUMBER=NUMBER+1
       AOLD=ANEW
-      ANEW=ANEW-.5*(X+XX)*DEL/(Y-X)*B
+      ANEW=ANEW-.5d0*(X+XX)*DEL/(Y-X)*B
       TIME=TIME+TIMLAG
       K=K-1
       IF(NUMBER.EQ.2)GO TO 10
       DELX=PERCNT(NUMBER-1)-PERCNT(NUMBER-2)
-      IF(DELX.LE..51)GO TO 1000
+      IF(DELX.LE..51d0)GO TO 1000
       GO TO 10
 1000  CONTINUE
       NUMBER=NUMBER-1
@@ -153,26 +153,26 @@ C  ----------------------------------------------------------------------
       IF(NUMBER.GE.150)GO TO 1250
       NNUM=150-NUMBER
       XNUM=NNUM
-      REM=100.-PERCNT(NUMBER)
+      REM=100.d0-PERCNT(NUMBER)
       REM1=REM/XNUM
-      DELX=.5
+      DELX=.5d0
       IF(REM1.LT.DELX)GO TO 1150
       DO 1140 K=1,NNUM
       KTI=NUMBER+K
 1140  PERCNT(KTI)=PERCNT(KTI-1)+REM1
       GO TO 1200
-1150  XNUM=REM/DELX+1.
-      NNUM=XNUM
+1150  XNUM=REM/DELX+1.d0
+      NNUM=INT(XNUM)
       DO 1160 K=1,NNUM
       KTI=NUMBER+K
 1160  PERCNT(KTI-1)=PERCNT(KTI-2)+DELX
       NNUM=NNUM-1
 1200  NUMBER=NUMBER+NNUM
-      IF(PERCNT(NUMBER).GE.100.)PERCNT(NUMBER)=100.
-      IF(NUMBER.GE.100)GO TO 1250
-      IF(PERCNT(NUMBER).GE.100.)GO TO 1250
+      IF(PERCNT(NUMBER).GE.100.d0)PERCNT(NUMBER)=100.d0
+      IF(NUMBER.GE.100.d0)GO TO 1250
+      IF(PERCNT(NUMBER).GE.100.d0)GO TO 1250
       NUMBER=NUMBER+1
-      PERCNT(NUMBER)=100.
+      PERCNT(NUMBER)=100.d0
 1250  CONTINUE
 C
       RETURN

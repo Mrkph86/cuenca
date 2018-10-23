@@ -27,7 +27,7 @@ C ------------------------------------------------------------------------------
 C   DECLARE VARIABLES
 C --------------------------------------------------------------------------------------
       IMPLICIT DOUBLE PRECISION (a-h, o-z)
-      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3) !(8.29.18)
+!      COMMON/BLK1/SS(600,10),SS1(600,10),Hydro(600,3) !(8.29.18)
       COMMON/NUT/NUT
       COMMON/NDAT/NDAT
       DIMENSION A(600)
@@ -48,8 +48,8 @@ C   CONVERSION
 C --------------------------------------------------------------------------------------       
 C!      J1=1
 C!      DO 201 I=1,NBASIN ! (marco)
-C!      BD(I)=BD(I)/(0.3048) !To obtain feet
-C!      BQ(I)=BQ(I)/(0.3048**3) !To obtain cubic feet per second
+C!      BD(I)=BD(I)/(0.3048d0) !To obtain feet
+C!      BQ(I)=BQ(I)/(0.3048d0**3) !To obtain cubic feet per second
 C!      BV(I)=BV(I)/(1233.8184) !To obtain acre-feet from m^3 (Basin Storage)
 C!      J1=J1+3
 C!201   CONTINUE ! IF I active the DO 
@@ -102,7 +102,7 @@ C INITIALIZE VARIABLES
        TIME=0.d0
        STORE=0.d0
        VOLUME=0.d0
-       NUMBER=A(600)
+       NUMBER=INT(A(600))
        ZERO=0.d0
 C      WRITE(NUT,403)
        WRITE(NUT,908)
@@ -161,15 +161,15 @@ C ------------------------------------------------------------------------------
        S2=0.d0
        S1=BV(II)+TEMP*(BV(II+1)-BV(II))
        O1=BQ(II)+TEMP*(BQ(II+1)-BQ(II))
-       CON=60./43560.*5./2.d0
+       vCON=60.d0/43560.d0*5.d0/2.d0
        DO 1011 K=1,NBASIN
-       AA(K)=BV(K)-BQ(K)*CON
-1011   BB(K)=BV(K)+BQ(K)*CON
+       AA(K)=BV(K)-BQ(K)*vCON
+1011   BB(K)=BV(K)+BQ(K)*vCON
        AA(1)=BB(1)
-       CON=CON*2.d0
-       ATEMP=S1-O1*CON/2.d0
+       vCON=vCON*2.d0
+       ATEMP=S1-O1*vCON/2.d0
        DO 1000 K=I,576
-       QQ=CON*A(K)
+       QQ=vCON*A(K)
        TEMP=QQ+ATEMP
 !      CALL SEE(TEMP,B1,B2,I1,I2,BB,NBASIN,TIME)
        CALL SEE(TEMP,B1,B2,I1,I2,NUT,BB,NBASIN,TIME) ! Original from the book
@@ -177,7 +177,7 @@ C ------------------------------------------------------------------------------
        DEPTH2=BD(I1)+RATIO*(BD(I2)-BD(I1))
        S2=BV(I1)+RATIO*(BV(I2)-BV(I1))
        O2=BQ(I1)+RATIO*(BQ(I2)-BQ(I1))
-       ATEMP=S2-O2*CON/2.d0
+       ATEMP=S2-O2*vCON/2.d0
        TIME=TIME+.0833333d0
        OAVG=(O1+O2)/2.d0
        O1=O2
@@ -193,13 +193,13 @@ C HYDROGRAPH TO EXPORT
 C --------------------------------------------------------------------------------------
 !       A(600)=0
 !       Hydro(:,2)=A
-!	  Hydro(:,2)=A*(0.3048**3) !To convert in m^3/s
+!	  Hydro(:,2)=A*(0.3048d0**3) !To convert in m^3/s
 !       DO 716 I=1,mn2
 !       IF(I==1) THEN 
-!       Hydro(I,1)=0.083333
+!       Hydro(I,1)=0.083333d0
 !       ELSE
 !       J=I-1
-!       Hydro(I,1)=Hydro(J,1)+0.083333
+!       Hydro(I,1)=Hydro(J,1)+0.083333d0
 !       END IF
 !       WRITE(*,*) Hydro(I,1), Hydro(I,2), Hydro(I,3)
 !716    CONTINUE    
